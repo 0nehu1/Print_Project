@@ -64,6 +64,18 @@ public:
 	afx_msg void OnButtonColor();
 	afx_msg void OnButtonUpsize();
 	afx_msg void OnButtonDownsize();
+	COLORREF m_BrushColor;
+	afx_msg void OnButtonDash();
+	afx_msg void OnButtonDashdot();
+	afx_msg void OnButtonDashdotdot();
+	afx_msg void OnButtonDot();
+	afx_msg void OnButtonFigure();
+	afx_msg void OnButtonLine();
+	afx_msg void OnButtonLinestyle();
+	afx_msg void OnButtonRect();
+	afx_msg void OnButtonSolid();
+	afx_msg void OnButtonTri();
+	afx_msg void OnButtonCircle();
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전

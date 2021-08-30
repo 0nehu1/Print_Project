@@ -44,11 +44,21 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_COMMAND(ID_BUTTON_PENCIL, &CPrintProjectView::OnButtonPencil)
 	ON_COMMAND(ID_BUTTON_COLORFILL, &CPrintProjectView::OnButtonColorfill)
 	ON_COMMAND(ID_BUTTON_ERASER, &CPrintProjectView::OnButtonEraser)
-	ON_COMMAND(ID_COMBO_FIGURE, &CPrintProjectView::OnComboFigure)
-	ON_COMMAND(ID_COMBO_LINESTYLE, &CPrintProjectView::OnComboLinestyle)
+	
 	ON_COMMAND(ID_BUTTON_COLOR, &CPrintProjectView::OnButtonColor)
 	ON_COMMAND(ID_BUTTON_UPSIZE, &CPrintProjectView::OnButtonUpsize)
 	ON_COMMAND(ID_BUTTON_DOWNSIZE, &CPrintProjectView::OnButtonDownsize)
+	ON_COMMAND(ID_BUTTON_DASH, &CPrintProjectView::OnButtonDash)
+	ON_COMMAND(ID_BUTTON_DASHDOT, &CPrintProjectView::OnButtonDashdot)
+	ON_COMMAND(ID_BUTTON_DASHDOTDOT, &CPrintProjectView::OnButtonDashdotdot)
+	ON_COMMAND(ID_BUTTON_DOT, &CPrintProjectView::OnButtonDot)
+	ON_COMMAND(ID_BUTTON_FIGURE, &CPrintProjectView::OnButtonFigure)
+	ON_COMMAND(ID_BUTTON_LINE, &CPrintProjectView::OnButtonLine)
+	ON_COMMAND(ID_BUTTON_LINESTYLE, &CPrintProjectView::OnButtonLinestyle)
+	ON_COMMAND(ID_BUTTON_RECT, &CPrintProjectView::OnButtonRect)
+	ON_COMMAND(ID_BUTTON_SOLID, &CPrintProjectView::OnButtonSolid)
+	ON_COMMAND(ID_BUTTON_TRI, &CPrintProjectView::OnButtonTri)
+	ON_COMMAND(ID_BUTTON_CIRCLE, &CPrintProjectView::OnButtonCircle)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -187,15 +197,17 @@ void CPrintProjectView::OnComboFigure()
 void CPrintProjectView::OnComboLinestyle()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+
 }
 
 
 void CPrintProjectView::OnButtonColor()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	CColorDialog dlg();
+	CColorDialog dlg(m_BrushColor,CC_FULLOPEN);
 	dlg.DoModal();
-	
+	COLORREF m_BrushColor = dlg.GetColor();
 }
 
 
@@ -206,6 +218,72 @@ void CPrintProjectView::OnButtonUpsize()
 
 
 void CPrintProjectView::OnButtonDownsize()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CPrintProjectView::OnButtonDash()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CPrintProjectView::OnButtonDashdot()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CPrintProjectView::OnButtonDashdotdot()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CPrintProjectView::OnButtonDot()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CPrintProjectView::OnButtonFigure()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CPrintProjectView::OnButtonLine()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CPrintProjectView::OnButtonLinestyle()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CPrintProjectView::OnButtonRect()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CPrintProjectView::OnButtonSolid()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CPrintProjectView::OnButtonTri()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+void CPrintProjectView::OnButtonCircle()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
