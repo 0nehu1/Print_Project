@@ -193,9 +193,9 @@ void CPrintProjectView::OnComboLinestyle()
 void CPrintProjectView::OnButtonColor()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	CColorDialog dlg();
+	CColorDialog dlg(m_BrushColor,CC_FULLOPEN);
 	dlg.DoModal();
-	
+	COLORREF m_BrushColor = dlg.GetColor();
 }
 
 

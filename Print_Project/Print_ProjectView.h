@@ -64,6 +64,7 @@ public:
 	afx_msg void OnButtonColor();
 	afx_msg void OnButtonUpsize();
 	afx_msg void OnButtonDownsize();
+	COLORREF m_BrushColor;
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전
