@@ -26,6 +26,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include "MainFrm.h"
 
 
 // CPrintProjectView
@@ -59,13 +60,38 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_COMMAND(ID_BUTTON_SOLID, &CPrintProjectView::OnButtonSolid)
 	ON_COMMAND(ID_BUTTON_TRI, &CPrintProjectView::OnButtonTri)
 	ON_COMMAND(ID_BUTTON_CIRCLE, &CPrintProjectView::OnButtonCircle)
+	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
+	ON_COMMAND(ID_BUTTON_ALLERASE, &CPrintProjectView::OnButtonAllerase)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
 
-CPrintProjectView::CPrintProjectView() noexcept
+CPrintProjectView::CPrintProjectView() 
+	: m_nDrawMode(0)
+	//, m_nHatchStyle(0)
+	, m_ptStart(0)
+	, m_ptPrev(0)
+	//, m_bFirst(false)
+	, m_bLButtonDown(false)
+	//, m_bContextMenu(false)
+	, m_bHatch(false)
+	, m_nCount(0)
+	, m_nPenMode(0)
 {
-	// TODO: 여기에 생성 코드를 추가합니다.
+	m_bContextMenu = true;
+	m_bFirst = true;
+
+	for (int i = 0; i < 100; i++)
+	{
+		m_ptData[i] = 0;
+	}
+	//같은 거 memset(m_ptData, 0, sizeof(CPoint) * 100);
+
+	m_nHatchStyle = HS_CROSS;
+	m_PenColor = RGB(0, 0, 0); //black
+	m_BrushColor = RGB(255, 255, 255); //white
 
 }
 
@@ -83,12 +109,63 @@ BOOL CPrintProjectView::PreCreateWindow(CREATESTRUCT& cs)
 
 // CPrintProjectView 그리기
 
-void CPrintProjectView::OnDraw(CDC* /*pDC*/)
+void CPrintProjectView::OnDraw(CDC* pDC)
 {
 	CPrintProjectDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
+
+	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
+	CPen pen, * oldpen;
+	switch (m_nPenMode)
+	{
+	case 0:
+		pen.CreatePen(PS_SOLID, 1, m_PenColor);	//pen 객체 생성
+		break;
+	case 1:
+		pen.CreatePen(PS_DASH, 1, m_PenColor);	//pen 객체 생성
+		break;
+	case 2:
+		pen.CreatePen(PS_DOT, 1, m_PenColor);	//pen 객체 생성
+		break;
+	case 3:
+		pen.CreatePen(PS_DASHDOT, 1, m_PenColor);	//pen 객체 생성
+		break;
+	case 4:
+		pen.CreatePen(PS_DASHDOTDOT, 1, m_PenColor);	//pen 객체 생성
+		break;
+	
+	}
+
+	oldpen = pDC->SelectObject(&pen);		//pen 객체 등록
+	pDC->SetROP2(R2_COPYPEN);				//COPTPEN으로 설정
+
+	CBrush brush, * oldbrush;
+	if (m_bHatch)		//brush 객체 생성
+		brush.CreateHatchBrush(m_nHatchStyle, m_BrushColor);
+	else				//brush 객체 등록
+		brush.CreateSolidBrush(m_BrushColor);
+	oldbrush = pDC->SelectObject(&brush);
+
+	switch (m_nDrawMode)
+	{
+	case LINE_MODE:
+		pDC->MoveTo(m_ptStart);
+		pDC->LineTo(m_ptPrev);
+		break;
+	case ELLIPSE_MODE:
+		pDC->Ellipse(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
+		break;
+	case RECTANGLE_MODE:
+		pDC->Rectangle(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
+		break;
+	
+	}
+	pDC->SelectObject(oldpen);		//이전 pen으로 설정
+	pDC->SelectObject(oldbrush);	//이전 brush로 설정
+	pen.DeleteObject();				//pen 객체 삭제
+	brush.DeleteObject();			//brush 객체 삭제
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 }
@@ -173,12 +250,20 @@ void CPrintProjectView::OnButtonRotate()
 void CPrintProjectView::OnButtonPencil()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+
 }
 
 
 void CPrintProjectView::OnButtonColorfill()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CColorDialog dlgColor;
+	if (dlgColor.DoModal() == IDOK)
+	{
+		m_BrushColor = dlgColor.GetColor();
+	}
+	Invalidate(false);
 }
 
 
@@ -205,9 +290,19 @@ void CPrintProjectView::OnComboLinestyle()
 void CPrintProjectView::OnButtonColor()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	CColorDialog dlg(m_BrushColor,CC_FULLOPEN);
-	dlg.DoModal();
-	COLORREF m_BrushColor = dlg.GetColor();
+	//CColorDialog dlg(m_BrushColor,CC_FULLOPEN);
+	//CColorDialog dlg(m_PenColor, CC_FULLOPEN);
+	//dlg.DoModal();
+	//COLORREF m_BrushColor = dlg.GetColor();
+	//COLORREF m_PenColor = dlg.GetColor();
+
+	CColorDialog dlgColor;
+	if (dlgColor.DoModal() == IDOK)
+	{
+		m_PenColor = dlgColor.GetColor();
+	}
+	Invalidate(false);
+	
 }
 
 
@@ -223,37 +318,43 @@ void CPrintProjectView::OnButtonDownsize()
 }
 
 
+void CPrintProjectView::OnButtonSolid()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nPenMode = 0;
+}
+
+
 void CPrintProjectView::OnButtonDash()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nPenMode = 1;
 }
 
+void CPrintProjectView::OnButtonDot()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nPenMode = 2;
+}
 
 void CPrintProjectView::OnButtonDashdot()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nPenMode = 3;
 }
 
 
 void CPrintProjectView::OnButtonDashdotdot()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nPenMode = 4;
 }
 
 
-void CPrintProjectView::OnButtonDot()
-{
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
+
 
 
 void CPrintProjectView::OnButtonFigure()
-{
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
-
-
-void CPrintProjectView::OnButtonLine()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
@@ -264,26 +365,261 @@ void CPrintProjectView::OnButtonLinestyle()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
 
-
-void CPrintProjectView::OnButtonRect()
+void CPrintProjectView::OnButtonLine()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
+	m_nDrawMode = 0;
 
-
-void CPrintProjectView::OnButtonSolid()
-{
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
-
-
-void CPrintProjectView::OnButtonTri()
-{
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	//스테이터스 바 표시
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	pFrame->m_wndStatusBar.SetWindowText(_T("직선 그리기"));
 }
 
 
 void CPrintProjectView::OnButtonCircle()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nDrawMode = 1;
+
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	pFrame->m_wndStatusBar.SetWindowText(_T("원 그리기"));
+}
+void CPrintProjectView::OnButtonRect()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nDrawMode = 2;
+
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	pFrame->m_wndStatusBar.SetWindowText(_T("사각형 그리기"));
+}
+
+
+
+void CPrintProjectView::OnButtonTri()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+}
+
+
+
+
+
+void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+
+	CString strPoint;
+	strPoint.Format(_T("마우스 위치 x:%d, y:%d"), point.x, point.y);
+
+
+	//사용 위해 protected->public
+
+	//======================================================
+	CClientDC dc(this);							//클라이언트 객체 얻음
+	CPen pen, * oldpen;
+	switch (m_nPenMode)
+	{
+	case 0:
+		pen.CreatePen(PS_SOLID, 1, m_PenColor);	//pen 객체 생성
+		break;
+	case 1:
+		pen.CreatePen(PS_DASH, 1, m_PenColor);	//pen 객체 생성
+		break;
+	case 2:
+		pen.CreatePen(PS_DOT, 1, m_PenColor);	//pen 객체 생성
+		break;
+	case 3:
+		pen.CreatePen(PS_DASHDOT, 1, m_PenColor);	//pen 객체 생성
+		break;
+	case 4:
+		pen.CreatePen(PS_DASHDOTDOT, 1, m_PenColor);	//pen 객체 생성
+		break;
+
+	}	//Pen 객체 생성
+	oldpen = dc.SelectObject(&pen);				//Pen 객체 등록
+
+	dc.SetROP2(R2_NOTXORPEN);					//R2_NOTXORPEN으로 설정
+
+	CBrush brush, * oldbrush;
+	if (m_bHatch)
+		brush.CreateHatchBrush(m_nHatchStyle, m_PenColor); //Hatch Brush 객체 생성
+	else
+		brush.CreateSolidBrush(m_PenColor);				 //Solid Brush 객체 생성
+
+	oldbrush = dc.SelectObject(&brush);
+
+	switch (m_nDrawMode)
+	{
+	case LINE_MODE:						//직선 그리기
+		if (m_bLButtonDown)
+		{
+			dc.MoveTo(m_ptStart);
+			dc.LineTo(m_ptPrev);		//이전 직선 지움
+			dc.MoveTo(m_ptStart);
+			dc.LineTo(point);			//현재 직선 그림
+			m_ptPrev = point;			//이전 점에 현재 점을 저장
+		}
+		break;
+
+	case ELLIPSE_MODE:					//원 그리기
+		if (m_bLButtonDown)
+		{
+			dc.Ellipse(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
+			dc.Ellipse(m_ptStart.x, m_ptStart.y, point.x, point.y);
+			m_ptPrev = point;			//이전 점에 현재 점을 저장
+		}
+		break;
+
+	case RECTANGLE_MODE:
+		if (m_bLButtonDown)
+		{
+			dc.Rectangle(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
+			dc.Rectangle(m_ptStart.x, m_ptStart.y, point.x, point.y);
+			m_ptPrev = point;
+		}
+		break;
+	
+
+
+	}
+	dc.SelectObject(oldpen);			//이전 pen으로 설정
+	dc.SelectObject(oldbrush);			//이전 brush로 설정
+	pen.DeleteObject();					//pen 객체 삭제
+	brush.DeleteObject();				//brush 객체 삭제
+
+	CView::OnMouseMove(nFlags, point);
+}
+
+
+void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+
+	if (m_bFirst)
+	{
+		m_ptStart = m_ptPrev = 0;
+		m_bLButtonDown = false;
+		m_nCount = 0;
+		for (int i = 0; i < 100; i++)
+			m_ptData[i] = 0;
+		Invalidate(false);		//화면갱신
+	}
+
+	switch (m_nDrawMode)
+	{
+	case LINE_MODE:						//직선 그리기
+	case ELLIPSE_MODE:					//원 그리기
+	case RECTANGLE_MODE:
+		m_bLButtonDown = true;			//왼쪽 버튼 눌림
+		m_ptStart = m_ptPrev = point;	//시작 점과 이전 점에 현재 점을 저장
+		m_bFirst = false;				//처음 그리는 것 -> false
+		break;
+
+	
+	}
+
+	//러버밴드 때문에 추가
+	RECT rectClient;					//구조체 변수 선언
+	SetCapture();						//마우스 캡처
+	GetClientRect(&rectClient);			//클라이언트 영역 받음
+	ClientToScreen(&rectClient);		//스크린 좌표계 변환
+	::ClipCursor(&rectClient);			//마우스 이동 범위를 클라이언트 영역으로 제한
+
+	CView::OnLButtonDown(nFlags, point);
+}
+
+
+void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (m_bLButtonDown)
+	{
+		if (m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE)
+		{
+			m_bLButtonDown = false;
+			m_bFirst = true;
+			ReleaseCapture();		//마우스 캡처 해제
+			::ClipCursor(NULL);		//마우스 클립 해제
+			Invalidate(false);		//화면 갱신
+		}
+	}
+
+	CView::OnLButtonUp(nFlags, point);
+}
+
+void CPrintProjectView::OnUpdateLine(CCmdUI* pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	//pCmdUI->SetCheck(m_nDrawMode == LINE_MODE ? TRUE : FALSE);
+	pCmdUI->SetCheck(m_nDrawMode == LINE_MODE ? 1 : 0);
+
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	pFrame->m_wndStatusBar.SetWindowText(_T("직선 그리기"));
+}
+
+
+void CPrintProjectView::OnUpdateEllipse(CCmdUI* pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(m_nDrawMode == ELLIPSE_MODE ? TRUE : FALSE);
+
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	pFrame->m_wndStatusBar.SetWindowText(_T("원 그리기"));
+}
+
+
+void CPrintProjectView::OnUpdateRectangle(CCmdUI* pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(m_nDrawMode == RECTANGLE_MODE ? TRUE : FALSE);
+
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	pFrame->m_wndStatusBar.SetWindowText(_T("사각형 그리기"));
+}
+
+
+void CPrintProjectView::OnUpdateSolid(CCmdUI* pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(m_nPenMode == SOLID_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateDash(CCmdUI* pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(m_nPenMode == DASH_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateDot(CCmdUI* pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(m_nPenMode == DOT_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateDashdot(CCmdUI* pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(m_nPenMode == DASHDOT_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateDashdotdot(CCmdUI* pCmdUI)
+{
+	// TODO: Add your command update UI handler code here
+	pCmdUI->SetCheck(m_nPenMode == DASHDOTDOT_MODE ? 1 : 0);
+}
+
+
+
+
+
+void CPrintProjectView::OnButtonAllerase()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	Invalidate(TRUE);
 }

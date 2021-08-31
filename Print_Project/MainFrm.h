@@ -39,7 +39,7 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-protected:  // 컨트롤 모음이 포함된 멤버입니다.
+public:  // 컨트롤 모음이 포함된 멤버입니다.
 	CMFCRibbonBar     m_wndRibbonBar;
 	CMFCRibbonApplicationButton m_MainButton;
 	CMFCToolBarImages m_PanelImages;

@@ -13,12 +13,13 @@
 //
 
 #pragma once
-
+enum DRAW_MODE { LINE_MODE, ELLIPSE_MODE, RECTANGLE_MODE };
+enum PEN_MODE { SOLID_MODE, DASH_MODE, DOT_MODE, DASHDOT_MODE, DASHDOTDOT_MODE };
 
 class CPrintProjectView : public CView
 {
 protected: // serialization에서만 만들어집니다.
-	CPrintProjectView() noexcept;
+	CPrintProjectView();
 	DECLARE_DYNCREATE(CPrintProjectView)
 
 // 특성입니다.
@@ -64,7 +65,7 @@ public:
 	afx_msg void OnButtonColor();
 	afx_msg void OnButtonUpsize();
 	afx_msg void OnButtonDownsize();
-	COLORREF m_BrushColor;
+	
 	afx_msg void OnButtonDash();
 	afx_msg void OnButtonDashdot();
 	afx_msg void OnButtonDashdotdot();
@@ -76,6 +77,34 @@ public:
 	afx_msg void OnButtonSolid();
 	afx_msg void OnButtonTri();
 	afx_msg void OnButtonCircle();
+	CPoint m_ptStart;
+	CPoint m_ptPrev;
+	bool m_bFirst;
+	bool m_bLButtonDown;
+	bool m_bContextMenu;
+	bool m_bHatch;
+	CPoint m_ptData[100];
+	int m_nCount;
+	COLORREF m_PenColor;
+	COLORREF m_BrushColor;
+	int m_nPenMode;
+	int m_nDrawMode;
+	int m_nHatchStyle;
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+
+	afx_msg void OnUpdateLine(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateEllipse(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateRectangle(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateSolid(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateDash(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateDot(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateDashdot(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateDashdotdot(CCmdUI* pCmdUI);
+
+	afx_msg void OnButtonFigurecolor();
+	afx_msg void OnButtonAllerase();
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전
