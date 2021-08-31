@@ -28,7 +28,6 @@
 #endif
 #include "MainFrm.h"
 
-
 // CPrintProjectView
 
 IMPLEMENT_DYNCREATE(CPrintProjectView, CView)
@@ -160,7 +159,15 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 	case RECTANGLE_MODE:
 		pDC->Rectangle(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
 		break;
-	
+		
+	case ERASER_MODE:
+		pDC->Rectangle(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
+		break;
+	case TRIANGLE_MODE:
+		pDC->MoveTo(m_ptStart.x,m_ptStart.y);
+		pDC->LineTo(m_ptPrev.x,m_ptPrev.y);
+
+		break;
 	}
 	pDC->SelectObject(oldpen);		//이전 pen으로 설정
 	pDC->SelectObject(oldbrush);	//이전 brush로 설정
@@ -267,10 +274,6 @@ void CPrintProjectView::OnButtonColorfill()
 }
 
 
-void CPrintProjectView::OnButtonEraser()
-{
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
 
 
 void CPrintProjectView::OnComboFigure()
@@ -394,10 +397,23 @@ void CPrintProjectView::OnButtonRect()
 }
 
 
+void CPrintProjectView::OnButtonEraser()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nDrawMode = 3;
+
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	pFrame->m_wndStatusBar.SetWindowText(_T("사각형 그리기"));
+
+}
 
 void CPrintProjectView::OnButtonTri()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nDrawMode = 4;
+
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	pFrame->m_wndStatusBar.SetWindowText(_T("삼각형 그리기"));
 
 }
 
@@ -476,17 +492,37 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case RECTANGLE_MODE:
 		if (m_bLButtonDown)
 		{
+			
 			dc.Rectangle(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
 			dc.Rectangle(m_ptStart.x, m_ptStart.y, point.x, point.y);
 			m_ptPrev = point;
+
 		}
 		break;
-	
+
+\
+
+	case TRIANGLE_MODE:
+		if (m_bLButtonDown)
+		{
+			dc.MoveTo(m_ptStart.x, m_ptStart.y);
+			dc.LineTo(m_ptPrev.x, m_ptPrev.y);
+			dc.MoveTo(m_ptStart.x,m_ptStart.y);
+			dc.LineTo(point.x,point.y);			//현재 직선 그림
+			POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{(m_ptPrev.x - m_ptStart.x) / 2,(m_ptPrev.y - m_ptStart.y) / 2},{ m_ptPrev.x, m_ptPrev.y} };
+			POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{(point.x - m_ptStart.x) / 2,(point.y - m_ptStart.y) / 2},{point.x, point.y} };
+
+			dc.Polygon(arPt1, 3);
+
+			dc.Polygon(arPt2, 3);
+			m_ptPrev = point;
+
+		}
+		break;
 
 
 	}
-	dc.SelectObject(oldpen);			//이전 pen으로 설정
-	dc.SelectObject(oldbrush);			//이전 brush로 설정
+
 	pen.DeleteObject();					//pen 객체 삭제
 	brush.DeleteObject();				//brush 객체 삭제
 
@@ -512,6 +548,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 	case LINE_MODE:						//직선 그리기
 	case ELLIPSE_MODE:					//원 그리기
 	case RECTANGLE_MODE:
+	case TRIANGLE_MODE:
 		m_bLButtonDown = true;			//왼쪽 버튼 눌림
 		m_ptStart = m_ptPrev = point;	//시작 점과 이전 점에 현재 점을 저장
 		m_bFirst = false;				//처음 그리는 것 -> false
@@ -533,10 +570,11 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 {
+
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	if (m_bLButtonDown)
 	{
-		if (m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE)
+		if (m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE ||m_nDrawMode == TRIANGLE_MODE )
 		{
 			m_bLButtonDown = false;
 			m_bFirst = true;
@@ -544,8 +582,9 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 			::ClipCursor(NULL);		//마우스 클립 해제
 			Invalidate(false);		//화면 갱신
 		}
+		
 	}
-
+	
 	CView::OnLButtonUp(nFlags, point);
 }
 
@@ -577,6 +616,11 @@ void CPrintProjectView::OnUpdateRectangle(CCmdUI* pCmdUI)
 
 	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
 	pFrame->m_wndStatusBar.SetWindowText(_T("사각형 그리기"));
+}
+
+void CPrintProjectView::OnUpdateEraser(CCmdUI* pCmdUI)
+{
+	
 }
 
 

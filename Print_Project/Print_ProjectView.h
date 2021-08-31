@@ -13,7 +13,7 @@
 //
 
 #pragma once
-enum DRAW_MODE { LINE_MODE, ELLIPSE_MODE, RECTANGLE_MODE };
+enum DRAW_MODE { LINE_MODE, ELLIPSE_MODE, RECTANGLE_MODE , ERASER_MODE, TRIANGLE_MODE};
 enum PEN_MODE { SOLID_MODE, DASH_MODE, DOT_MODE, DASHDOT_MODE, DASHDOTDOT_MODE };
 
 class CPrintProjectView : public CView
@@ -97,6 +97,7 @@ public:
 	afx_msg void OnUpdateLine(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateEllipse(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateRectangle(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateEraser(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateSolid(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateDash(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateDot(CCmdUI* pCmdUI);
