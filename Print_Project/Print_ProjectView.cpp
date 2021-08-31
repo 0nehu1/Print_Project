@@ -27,6 +27,7 @@
 #define new DEBUG_NEW
 #endif
 #include "MainFrm.h"
+#include "LineControl.h"
 
 // CPrintProjectView
 
@@ -65,6 +66,10 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_COMMAND(ID_BUTTON_ALLERASE, &CPrintProjectView::OnButtonAllerase)
 	ON_COMMAND(ID_BUTTON_RIGHTTRI, &CPrintProjectView::OnButtonRighttri)
 	
+	
+	ON_WM_HSCROLL()
+	ON_COMMAND(ID_BUTTON_LINECONTROL, &CPrintProjectView::OnButtonLinecontrol)
+	ON_COMMAND(ID_BUTTON_LINECONTROL, &CPrintProjectView::OnButtonLinecontrol)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -80,6 +85,7 @@ CPrintProjectView::CPrintProjectView()
 	, m_bHatch(false)
 	, m_nCount(0)
 	, m_nPenMode(0)
+	, m_nPenSize(1)
 {
 	m_bContextMenu = true;
 	m_bFirst = true;
@@ -117,24 +123,25 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 	if (!pDoc)
 		return;
 
+
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 	CPen pen, * oldpen;
 	switch (m_nPenMode)
 	{
 	case 0:
-		pen.CreatePen(PS_SOLID, 1, m_PenColor);	//pen 객체 생성
+		pen.CreatePen(PS_SOLID, m_nPenSize, m_PenColor);	//pen 객체 생성
 		break;
 	case 1:
-		pen.CreatePen(PS_DASH, 1, m_PenColor);	//pen 객체 생성
+		pen.CreatePen(PS_DASH, m_nPenSize, m_PenColor);	//pen 객체 생성
 		break;
 	case 2:
-		pen.CreatePen(PS_DOT, 1, m_PenColor);	//pen 객체 생성
+		pen.CreatePen(PS_DOT, m_nPenSize, m_PenColor);	//pen 객체 생성
 		break;
 	case 3:
-		pen.CreatePen(PS_DASHDOT, 1, m_PenColor);	//pen 객체 생성
+		pen.CreatePen(PS_DASHDOT, m_nPenSize, m_PenColor);	//pen 객체 생성
 		break;
 	case 4:
-		pen.CreatePen(PS_DASHDOTDOT, 1, m_PenColor);	//pen 객체 생성
+		pen.CreatePen(PS_DASHDOTDOT, m_nPenSize, m_PenColor);	//pen 객체 생성
 		break;
 	
 	}
@@ -455,19 +462,19 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	switch (m_nPenMode)
 	{
 	case 0:
-		pen.CreatePen(PS_SOLID, 1, m_PenColor);	//pen 객체 생성
+		pen.CreatePen(PS_SOLID, m_nPenSize, m_PenColor);	//pen 객체 생성
 		break;
 	case 1:
-		pen.CreatePen(PS_DASH, 1, m_PenColor);	//pen 객체 생성
+		pen.CreatePen(PS_DASH, m_nPenSize, m_PenColor);	//pen 객체 생성
 		break;
 	case 2:
-		pen.CreatePen(PS_DOT, 1, m_PenColor);	//pen 객체 생성
+		pen.CreatePen(PS_DOT, m_nPenSize, m_PenColor);	//pen 객체 생성
 		break;
 	case 3:
-		pen.CreatePen(PS_DASHDOT, 1, m_PenColor);	//pen 객체 생성
+		pen.CreatePen(PS_DASHDOT, m_nPenSize, m_PenColor);	//pen 객체 생성
 		break;
 	case 4:
-		pen.CreatePen(PS_DASHDOTDOT, 1, m_PenColor);	//pen 객체 생성
+		pen.CreatePen(PS_DASHDOTDOT, m_nPenSize, m_PenColor);	//pen 객체 생성
 		break;
 
 	}	//Pen 객체 생성
@@ -720,3 +727,19 @@ void CPrintProjectView::OnButtonAllerase()
 
 
 
+
+
+
+
+void CPrintProjectView::OnButtonLinecontrol()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	LineControl dlg;
+	
+	if (dlg.DoModal() == IDOK)
+	{
+		m_nPenSize = dlg.m_StrSize;
+
+	}
+	Invalidate(false);
+}

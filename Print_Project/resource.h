@@ -35,6 +35,9 @@
 #define ID_VIEW_APPLOOK_WINDOWS_7       219
 #define IDS_EDIT_MENU                   306
 #define IDR_RIBBON                      307
+#define IDD_DIALOG_LINECONTROL          310
+#define IDC_SLIDER_LINECONTROL          1000
+#define IDC_EDIT_LINECONTROL            1001
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_BUTTON_SIZECTRL              32771
 #define ID_BUTTON_ROTATE                32772
@@ -57,15 +60,15 @@
 #define ID_BUTTON_DASHDOTDOT            32794
 #define ID_BUTTON_ALLERASE              32796
 #define ID_BUTTON_RIGHTTRI              32797
-#define ID_BUTTON_UNDO                  32799
+#define ID_BUTTON_LINECONTROL           32801
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        310
-#define _APS_NEXT_COMMAND_VALUE         32800
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_RESOURCE_VALUE        312
+#define _APS_NEXT_COMMAND_VALUE         32802
+#define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

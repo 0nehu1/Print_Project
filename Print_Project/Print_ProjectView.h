@@ -90,6 +90,7 @@ public:
 	int m_nPenMode;
 	int m_nDrawMode;
 	int m_nHatchStyle;
+	int m_nPenSize;
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
@@ -108,6 +109,8 @@ public:
 	afx_msg void OnButtonAllerase();
 	afx_msg void OnButtonRighttri();
 	afx_msg void OnButtonUndo();
+
+	afx_msg void OnButtonLinecontrol();
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전
