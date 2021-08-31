@@ -63,6 +63,7 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
 	ON_COMMAND(ID_BUTTON_ALLERASE, &CPrintProjectView::OnButtonAllerase)
+	ON_COMMAND(ID_BUTTON_RIGHTTRI, &CPrintProjectView::OnButtonRighttri)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -160,13 +161,17 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 		pDC->Rectangle(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
 		break;
 		
-	case ERASER_MODE:
-		pDC->Rectangle(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
-		break;
+
 	case TRIANGLE_MODE:
 		pDC->MoveTo(m_ptStart.x,m_ptStart.y);
 		pDC->LineTo(m_ptPrev.x,m_ptPrev.y);
+		//pDC->Polygon(m_ptData, m_nCount);
+		break;
 
+	case RIGHTTRIANGLE_MODE:
+		pDC->MoveTo(m_ptStart.x, m_ptStart.y);
+		pDC->LineTo(m_ptPrev.x, m_ptPrev.y);
+		//pDC->Polygon(m_ptData, m_nCount);
 		break;
 	}
 	pDC->SelectObject(oldpen);		//이전 pen으로 설정
@@ -400,10 +405,7 @@ void CPrintProjectView::OnButtonRect()
 void CPrintProjectView::OnButtonEraser()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	m_nDrawMode = 3;
-
-	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
-	pFrame->m_wndStatusBar.SetWindowText(_T("사각형 그리기"));
+	
 
 }
 
@@ -417,6 +419,14 @@ void CPrintProjectView::OnButtonTri()
 
 }
 
+void CPrintProjectView::OnButtonRighttri()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nDrawMode = 5;
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	pFrame->m_wndStatusBar.SetWindowText(_T("직각삼각형 그리기"));
+
+}
 
 
 
@@ -505,21 +515,36 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case TRIANGLE_MODE:
 		if (m_bLButtonDown)
 		{
-			dc.MoveTo(m_ptStart.x, m_ptStart.y);
-			dc.LineTo(m_ptPrev.x, m_ptPrev.y);
-			dc.MoveTo(m_ptStart.x,m_ptStart.y);
-			dc.LineTo(point.x,point.y);			//현재 직선 그림
-			POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{(m_ptPrev.x - m_ptStart.x) / 2,(m_ptPrev.y - m_ptStart.y) / 2},{ m_ptPrev.x, m_ptPrev.y} };
-			POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{(point.x - m_ptStart.x) / 2,(point.y - m_ptStart.y) / 2},{point.x, point.y} };
+			//dc.MoveTo(m_ptStart.x, m_ptStart.y);
+			//dc.LineTo(m_ptPrev.x, m_ptPrev.y);
+			//dc.MoveTo(m_ptStart.x,m_ptStart.y);
+			//dc.LineTo(point.x,point.y);			//현재 직선 그림
+			POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{(m_ptPrev.x - m_ptStart.x) / 2, m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
+			POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{(point.x - m_ptStart.x) / 2,point.y},{point.x, point.y} };
+			
 
 			dc.Polygon(arPt1, 3);
-
 			dc.Polygon(arPt2, 3);
 			m_ptPrev = point;
-
 		}
 		break;
 
+	case RIGHTTRIANGLE_MODE:
+		if (m_bLButtonDown)
+		{
+			//dc.MoveTo(m_ptStart.x, m_ptStart.y);
+			//dc.LineTo(m_ptPrev.x, m_ptPrev.y);
+			//dc.MoveTo(m_ptStart.x,m_ptStart.y);
+			//dc.LineTo(point.x,point.y);			//현재 직선 그림
+			POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x, m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
+			POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x, point.y},{point.x, point.y} };
+
+
+			dc.Polygon(arPt1, 3);
+			dc.Polygon(arPt2, 3);
+			m_ptPrev = point;
+		}
+		break;
 
 	}
 
@@ -549,6 +574,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 	case ELLIPSE_MODE:					//원 그리기
 	case RECTANGLE_MODE:
 	case TRIANGLE_MODE:
+	case RIGHTTRIANGLE_MODE:
 		m_bLButtonDown = true;			//왼쪽 버튼 눌림
 		m_ptStart = m_ptPrev = point;	//시작 점과 이전 점에 현재 점을 저장
 		m_bFirst = false;				//처음 그리는 것 -> false
@@ -574,7 +600,7 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	if (m_bLButtonDown)
 	{
-		if (m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE ||m_nDrawMode == TRIANGLE_MODE )
+		if (m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE ||m_nDrawMode == TRIANGLE_MODE || m_nDrawMode == RIGHTTRIANGLE_MODE)
 		{
 			m_bLButtonDown = false;
 			m_bFirst = true;
@@ -667,3 +693,4 @@ void CPrintProjectView::OnButtonAllerase()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	Invalidate(TRUE);
 }
+
