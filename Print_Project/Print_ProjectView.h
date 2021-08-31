@@ -13,7 +13,7 @@
 //
 
 #pragma once
-enum DRAW_MODE { LINE_MODE, ELLIPSE_MODE, RECTANGLE_MODE , ERASER_MODE, TRIANGLE_MODE, RIGHTTRIANGLE_MODE};
+enum DRAW_MODE { PENCIL_MODE,LINE_MODE, ELLIPSE_MODE, RECTANGLE_MODE , ERASER_MODE, TRIANGLE_MODE, RIGHTTRIANGLE_MODE};
 enum PEN_MODE { SOLID_MODE, DASH_MODE, DOT_MODE, DASHDOT_MODE, DASHDOTDOT_MODE };
 
 class CPrintProjectView : public CView
@@ -107,6 +107,7 @@ public:
 	afx_msg void OnButtonFigurecolor();
 	afx_msg void OnButtonAllerase();
 	afx_msg void OnButtonRighttri();
+	afx_msg void OnButtonUndo();
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전
