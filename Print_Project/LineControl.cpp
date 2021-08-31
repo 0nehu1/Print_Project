@@ -49,7 +49,7 @@ BOOL LineControl::OnInitDialog()
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
 	
 	m_SliderLineControl.SetRange(0, 100);
-	m_SliderLineControl.SetPos(10);
+	m_SliderLineControl.SetPos(1);
 	m_SliderLineControl.SetLineSize(1);
 	m_SliderLineControl.SetPageSize(2);
 
