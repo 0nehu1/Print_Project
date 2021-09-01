@@ -70,6 +70,7 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_WM_HSCROLL()
 	ON_COMMAND(ID_BUTTON_LINECONTROL, &CPrintProjectView::OnButtonLinecontrol)
 	ON_COMMAND(ID_BUTTON_LINECONTROL, &CPrintProjectView::OnButtonLinecontrol)
+	ON_COMMAND(ID_BUTTON_ROUNDRECT, &CPrintProjectView::OnButtonRoundrect)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -169,6 +170,9 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 		pDC->Rectangle(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
 		break;
 		
+	case ROUNDRECT_MODE:
+		pDC->RoundRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y,50,50);
+		break;
 
 	case TRIANGLE_MODE:
 		pDC->MoveTo(m_ptStart.x,m_ptStart.y);
@@ -415,6 +419,14 @@ void CPrintProjectView::OnButtonRect()
 }
 
 
+void CPrintProjectView::OnButtonRoundrect()
+{
+	m_nDrawMode = 7;
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	pFrame->m_wndStatusBar.SetWindowText(_T("둥근사각형 그리기"));
+}
+
+
 void CPrintProjectView::OnButtonEraser()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
@@ -536,7 +548,16 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 
 		}
 		break;
+	case ROUNDRECT_MODE:
+		if (m_bLButtonDown)
+		{
 
+			dc.RoundRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y,50,50);
+			dc.RoundRect(m_ptStart.x, m_ptStart.y, point.x, point.y,50,50);
+			m_ptPrev = point;
+
+		}
+		break;
 \
 
 	case TRIANGLE_MODE:
@@ -603,6 +624,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 	case RECTANGLE_MODE:
 	case TRIANGLE_MODE:
 	case RIGHTTRIANGLE_MODE:
+	case ROUNDRECT_MODE:
 		m_bLButtonDown = true;			//왼쪽 버튼 눌림
 		m_ptStart = m_ptPrev = point;	//시작 점과 이전 점에 현재 점을 저장
 		m_bFirst = false;				//처음 그리는 것 -> false
@@ -630,7 +652,7 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	if (m_bLButtonDown)
 	{
-		if (m_nDrawMode == PENCIL_MODE || m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE ||m_nDrawMode == TRIANGLE_MODE || m_nDrawMode == RIGHTTRIANGLE_MODE)
+		if (m_nDrawMode == PENCIL_MODE || m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE ||m_nDrawMode == TRIANGLE_MODE || m_nDrawMode == RIGHTTRIANGLE_MODE || m_nDrawMode == ROUNDRECT_MODE)
 		{
 			m_bLButtonDown = false;
 			m_bFirst = true;
@@ -743,3 +765,5 @@ void CPrintProjectView::OnButtonLinecontrol()
 	}
 	Invalidate(false);
 }
+
+
