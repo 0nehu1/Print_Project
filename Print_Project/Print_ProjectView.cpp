@@ -164,8 +164,6 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 	switch (m_nDrawMode)
 	{
 	case PENCIL_MODE:
-		oldpen = pDC->SelectObject(&pen);	
-		oldbrush = pDC->SelectObject(&brush);
 			break;
 	case LINE_MODE:
 		pDC->MoveTo(m_ptStart);
@@ -209,12 +207,7 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 		//pDC->Polygon(m_ptData, m_nCount);
 		break;
 	case ERASER_MODE:
-		CPen pen;
-		CBrush brush(RGB(255, 255, 255));
-		//현재 직선 그림
-		pen.CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
-		 pDC->SelectObject(&pen);
-		pDC->SelectObject(&brush);
+		
 		
 		break;
 	}
@@ -560,8 +553,8 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	}	//Pen 객체 생성
 	oldpen = dc.SelectObject(&pen);				//Pen 객체 등록
 
-	dc.SetROP2(R2_NOTXORPEN);					//R2_NOTXORPEN으로 설정
-
+	//dc.SetROP2(R2_NOTXORPEN);					//R2_NOTXORPEN으로 설정
+	dc.SetROP2(R2_COPYPEN);				
 	CBrush brush, * oldbrush;
 	if (m_bHatch)
 		brush.CreateHatchBrush(m_nHatchStyle, m_PenColor); //Hatch Brush 객체 생성
@@ -600,7 +593,12 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 		{
 			pen.DeleteObject();					//pen 객체 삭제
 			brush.DeleteObject();				//brush 객체 삭제
-			
+			CPen pen;
+			CBrush brush(RGB(255, 255, 255));
+			//현재 직선 그림
+			pen.CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
+			dc.SelectObject(&pen);
+			dc.SelectObject(&brush);
 		    //dc.SelectObject(&brush);
 			dc.Rectangle(point.x - 15, point.y - 15, point.x + 15, point.y + 15);
 			
