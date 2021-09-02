@@ -64,15 +64,15 @@
 #define ID_BUTTON_ROUNDRECT             32802
 #define ID_BUTTON_PIERECT               32803
 #define ID_BUTTON_HALFCIRCLE            32804
-#define ID_BUTTON3                      32805
 #define ID_BUTTON_HALFCIRCLE2           32805
+#define ID_BUTTON_270PIERECT            32806
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        312
-#define _APS_NEXT_COMMAND_VALUE         32806
+#define _APS_NEXT_COMMAND_VALUE         32807
 #define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

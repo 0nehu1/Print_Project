@@ -74,6 +74,7 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_COMMAND(ID_BUTTON_PIERECT, &CPrintProjectView::OnButtonPierect)
 	ON_COMMAND(ID_BUTTON_HALFCIRCLE, &CPrintProjectView::OnButtonHalfcircle)
 	ON_COMMAND(ID_BUTTON_HALFCIRCLE2, &CPrintProjectView::OnButtonHalfcircle2)
+	ON_COMMAND(ID_BUTTON_270PIERECT, &CPrintProjectView::OnButton270pierect)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -190,6 +191,9 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 		break;
 	case HALFCIRCLE_VERTICAL_MODE:
 		pDC->Pie(PieRect, CPoint(PieRect.CenterPoint().x, m_ptStart.y), CPoint(PieRect.CenterPoint().x, m_ptPrev.y));
+		break;
+	case PIERECT270_MODE:
+		pDC->Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
 		break;
 	case TRIANGLE_MODE:
 		//pDC->MoveTo(m_ptStart.x,m_ptStart.y);
@@ -498,6 +502,16 @@ void CPrintProjectView::OnButtonHalfcircle2()
 
 }
 
+
+void CPrintProjectView::OnButton270pierect()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nDrawMode = 11;
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	pFrame->m_wndStatusBar.SetWindowText(_T("270도 부채꼴 그리기"));
+}
+
+
 void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
@@ -610,6 +624,17 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 		m_ptPrev = point;
 
 	}
+	case PIERECT270_MODE:
+		if (m_bLButtonDown)
+		{
+			CRect PieRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
+			
+			dc.Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
+			dc.Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
+			
+			m_ptPrev = point;
+
+		}
 	break;
 	case HALFCIRCLE_HORIZONTAL_MODE:
 		if (m_bLButtonDown)
@@ -699,6 +724,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 	case PIERECT_MODE:
 	case HALFCIRCLE_HORIZONTAL_MODE:
 	case HALFCIRCLE_VERTICAL_MODE:
+	case PIERECT270_MODE:
 		m_bLButtonDown = true;			//왼쪽 버튼 눌림
 		m_ptStart = m_ptPrev = point;	//시작 점과 이전 점에 현재 점을 저장
 		m_bFirst = false;				//처음 그리는 것 -> false
@@ -728,7 +754,8 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 	{
 		if (m_nDrawMode == PENCIL_MODE || m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE 
 			||m_nDrawMode == TRIANGLE_MODE || m_nDrawMode == RIGHTTRIANGLE_MODE || m_nDrawMode == ROUNDRECT_MODE 
-			|| m_nDrawMode == PIERECT_MODE || m_nDrawMode == HALFCIRCLE_HORIZONTAL_MODE || m_nDrawMode == HALFCIRCLE_VERTICAL_MODE)
+			|| m_nDrawMode == PIERECT_MODE || m_nDrawMode == HALFCIRCLE_HORIZONTAL_MODE || m_nDrawMode == HALFCIRCLE_VERTICAL_MODE
+			|| m_nDrawMode == PIERECT270_MODE)
 		{
 			m_bLButtonDown = false;
 			m_bFirst = true;
@@ -841,6 +868,7 @@ void CPrintProjectView::OnButtonLinecontrol()
 	}
 	Invalidate(false);
 }
+
 
 
 
