@@ -92,6 +92,8 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_ROUNDRECT, &CPrintProjectView::OnUpdateButtonRoundrect)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_SOLID, &CPrintProjectView::OnUpdateButtonSolid)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_TRI, &CPrintProjectView::OnUpdateButtonTri)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_LINESTYLE, &CPrintProjectView::OnUpdateButtonLinestyle)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_FIGURE, &CPrintProjectView::OnUpdateButtonFigure)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -891,6 +893,11 @@ void CPrintProjectView::OnButtonLinecontrol()
 
 
 
+void CPrintProjectView::OnUpdateButtonLinestyle(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nPenMode == SOLID_MODE || DASH_MODE || DOT_MODE || DASHDOT_MODE || DASHDOTDOT_MODE ? 1 : 0);
+}
 
 
 void CPrintProjectView::OnUpdateButtonSolid(CCmdUI* pCmdUI)
@@ -1009,4 +1016,12 @@ void CPrintProjectView::OnUpdateButtonCircle(CCmdUI* pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
 	pCmdUI->SetCheck(m_nDrawMode == ELLIPSE_MODE ? 1 : 0);
+}
+
+
+
+void CPrintProjectView::OnUpdateButtonFigure(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode != PENCIL_MODE ? 1 : 0);
 }
