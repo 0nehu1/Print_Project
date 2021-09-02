@@ -554,7 +554,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	oldpen = dc.SelectObject(&pen);				//Pen 객체 등록
 
 	//dc.SetROP2(R2_NOTXORPEN);					//R2_NOTXORPEN으로 설정
-	dc.SetROP2(R2_COPYPEN);				
+	//dc.SetROP2(R2_COPYPEN);				
 	CBrush brush, * oldbrush;
 	if (m_bHatch)
 		brush.CreateHatchBrush(m_nHatchStyle, m_PenColor); //Hatch Brush 객체 생성
@@ -569,7 +569,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 		if (m_bLButtonDown)
 		{
 			
-			
+			dc.SetROP2(R2_NOTXORPEN);
 			dc.MoveTo(m_ptPrev);
 			dc.LineTo(point);			//현재 직선 그림
 			m_ptPrev = point;			//이전 점에 현재 점을 저장
@@ -580,6 +580,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case LINE_MODE:						//직선 그리기
 		if (m_bLButtonDown)
 		{
+			dc.SetROP2(R2_NOTXORPEN);
 			dc.MoveTo(m_ptStart);
 			dc.LineTo(m_ptPrev);		//이전 직선 지움
 			dc.MoveTo(m_ptStart);
@@ -591,6 +592,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case ERASER_MODE:
 		if (m_bLButtonDown)
 		{
+			dc.SetROP2(R2_COPYPEN);
 			pen.DeleteObject();					//pen 객체 삭제
 			brush.DeleteObject();				//brush 객체 삭제
 			CPen pen;
@@ -609,6 +611,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case ELLIPSE_MODE:					//원 그리기
 		if (m_bLButtonDown)
 		{
+			dc.SetROP2(R2_NOTXORPEN);
 			dc.Ellipse(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
 			dc.Ellipse(m_ptStart.x, m_ptStart.y, point.x, point.y);
 			m_ptPrev = point;			//이전 점에 현재 점을 저장
@@ -618,7 +621,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case RECTANGLE_MODE:
 		if (m_bLButtonDown)
 		{
-			
+			dc.SetROP2(R2_NOTXORPEN);
 			dc.Rectangle(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
 			dc.Rectangle(m_ptStart.x, m_ptStart.y, point.x, point.y);
 			m_ptPrev = point;
@@ -628,7 +631,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case ROUNDRECT_MODE:
 		if (m_bLButtonDown)
 		{
-
+			dc.SetROP2(R2_NOTXORPEN);
 			dc.RoundRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y,50,50);
 			dc.RoundRect(m_ptStart.x, m_ptStart.y, point.x, point.y,50,50);
 			m_ptPrev = point;
@@ -638,6 +641,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case PIERECT_MODE:
 	if (m_bLButtonDown)
 	{
+		dc.SetROP2(R2_NOTXORPEN);
 		CRect PieRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
 		dc.Pie(PieRect, CPoint(PieRect.CenterPoint().x, m_ptStart.y), CPoint(m_ptStart.x, PieRect.CenterPoint().y));
 		dc.Pie(PieRect, CPoint(PieRect.CenterPoint().x, m_ptStart.y), CPoint(m_ptStart.x, PieRect.CenterPoint().y));
@@ -650,6 +654,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case PIERECT270_MODE:
 		if (m_bLButtonDown)
 		{
+			dc.SetROP2(R2_NOTXORPEN);
 			CRect PieRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
 			
 			dc.Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
@@ -662,6 +667,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case HALFCIRCLE_HORIZONTAL_MODE:
 		if (m_bLButtonDown)
 		{
+			dc.SetROP2(R2_NOTXORPEN);
 			CRect PieRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
 			dc.Pie(PieRect, CPoint(m_ptPrev.x, PieRect.CenterPoint().y), CPoint(m_ptStart.x, PieRect.CenterPoint().y));
 			dc.Pie(PieRect, CPoint(m_ptPrev.x, PieRect.CenterPoint().y), CPoint(m_ptStart.x, PieRect.CenterPoint().y));
@@ -672,6 +678,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case HALFCIRCLE_VERTICAL_MODE:
 		if (m_bLButtonDown)
 		{
+			dc.SetROP2(R2_NOTXORPEN);
 			CRect PieRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
 			dc.Pie(PieRect, CPoint(PieRect.CenterPoint().x, m_ptStart.y), CPoint(PieRect.CenterPoint().x, m_ptPrev.y));
 			dc.Pie(PieRect, CPoint(PieRect.CenterPoint().x, m_ptStart.y), CPoint(PieRect.CenterPoint().x, m_ptPrev.y));
@@ -682,6 +689,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case TRIANGLE_MODE:
 		if (m_bLButtonDown)
 		{
+			dc.SetROP2(R2_NOTXORPEN);
 			//dc.MoveTo(m_ptStart.x, m_ptStart.y);
 			//dc.LineTo(m_ptPrev.x, m_ptPrev.y);
 			//dc.MoveTo(m_ptStart.x,m_ptStart.y);
@@ -699,6 +707,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case RIGHTTRIANGLE_MODE:
 		if (m_bLButtonDown)
 		{
+			dc.SetROP2(R2_NOTXORPEN);
 			//dc.MoveTo(m_ptStart.x, m_ptStart.y);
 			//dc.LineTo(m_ptPrev.x, m_ptPrev.y);
 			//dc.MoveTo(m_ptStart.x,m_ptStart.y);
