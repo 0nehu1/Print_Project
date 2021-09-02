@@ -118,6 +118,23 @@ public:
 	afx_msg void OnButtonHalfcircle();
 	afx_msg void OnButtonHalfcircle2();
 	afx_msg void OnButton270pierect();
+	afx_msg void OnUpdateButton270pierect(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonCircle(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonDash(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonDashdot(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonDashdotdot(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonDot(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonEraser(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonHalfcircle(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonHalfcircle2(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonLine(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonPencil(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonPierect(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonRect(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonRighttri(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonRoundrect(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonSolid(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonTri(CCmdUI* pCmdUI);
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전

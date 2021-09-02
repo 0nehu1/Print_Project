@@ -75,6 +75,23 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_COMMAND(ID_BUTTON_HALFCIRCLE, &CPrintProjectView::OnButtonHalfcircle)
 	ON_COMMAND(ID_BUTTON_HALFCIRCLE2, &CPrintProjectView::OnButtonHalfcircle2)
 	ON_COMMAND(ID_BUTTON_270PIERECT, &CPrintProjectView::OnButton270pierect)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_270PIERECT, &CPrintProjectView::OnUpdateButton270pierect)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_CIRCLE, &CPrintProjectView::OnUpdateButtonCircle)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_DASH, &CPrintProjectView::OnUpdateButtonDash)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_DASHDOT, &CPrintProjectView::OnUpdateButtonDashdot)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_DASHDOTDOT, &CPrintProjectView::OnUpdateButtonDashdotdot)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_DOT, &CPrintProjectView::OnUpdateButtonDot)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_ERASER, &CPrintProjectView::OnUpdateButtonEraser)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_HALFCIRCLE, &CPrintProjectView::OnUpdateButtonHalfcircle)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_HALFCIRCLE2, &CPrintProjectView::OnUpdateButtonHalfcircle2)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_LINE, &CPrintProjectView::OnUpdateButtonLine)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_PENCIL, &CPrintProjectView::OnUpdateButtonPencil)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_PIERECT, &CPrintProjectView::OnUpdateButtonPierect)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_RECT, &CPrintProjectView::OnUpdateButtonRect)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_RIGHTTRI, &CPrintProjectView::OnUpdateButtonRighttri)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_ROUNDRECT, &CPrintProjectView::OnUpdateButtonRoundrect)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_SOLID, &CPrintProjectView::OnUpdateButtonSolid)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_TRI, &CPrintProjectView::OnUpdateButtonTri)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -833,45 +850,8 @@ void CPrintProjectView::OnUpdateRectangle(CCmdUI* pCmdUI)
 	pFrame->m_wndStatusBar.SetWindowText(_T("사각형 그리기"));
 }
 
-void CPrintProjectView::OnUpdateEraser(CCmdUI* pCmdUI)
-{
-	
-}
 
 
-void CPrintProjectView::OnUpdateSolid(CCmdUI* pCmdUI)
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetCheck(m_nPenMode == SOLID_MODE ? 1 : 0);
-}
-
-
-void CPrintProjectView::OnUpdateDash(CCmdUI* pCmdUI)
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetCheck(m_nPenMode == DASH_MODE ? 1 : 0);
-}
-
-
-void CPrintProjectView::OnUpdateDot(CCmdUI* pCmdUI)
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetCheck(m_nPenMode == DOT_MODE ? 1 : 0);
-}
-
-
-void CPrintProjectView::OnUpdateDashdot(CCmdUI* pCmdUI)
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetCheck(m_nPenMode == DASHDOT_MODE ? 1 : 0);
-}
-
-
-void CPrintProjectView::OnUpdateDashdotdot(CCmdUI* pCmdUI)
-{
-	// TODO: Add your command update UI handler code here
-	pCmdUI->SetCheck(m_nPenMode == DASHDOTDOT_MODE ? 1 : 0);
-}
 
 
 
@@ -910,3 +890,123 @@ void CPrintProjectView::OnButtonLinecontrol()
 
 
 
+
+
+
+void CPrintProjectView::OnUpdateButtonSolid(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nPenMode == SOLID_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonDash(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nPenMode == DASH_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonDashdot(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nPenMode == DASHDOT_MODE ? 1 : 0);
+
+}
+
+
+void CPrintProjectView::OnUpdateButtonDashdotdot(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nPenMode == DASHDOTDOT_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonDot(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nPenMode == DOT_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonEraser(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == ERASER_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonHalfcircle(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == HALFCIRCLE_HORIZONTAL_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonHalfcircle2(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == HALFCIRCLE_VERTICAL_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonLine(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == LINE_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonPencil(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == PENCIL_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonPierect(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == PIERECT_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonRect(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == RECTANGLE_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonRighttri(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == RIGHTTRIANGLE_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonRoundrect(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == ROUNDRECT_MODE ? 1 : 0);
+
+}
+
+void CPrintProjectView::OnUpdateButtonTri(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == TRIANGLE_MODE ? 1 : 0);
+}
+
+void CPrintProjectView::OnUpdateButton270pierect(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == PIERECT270_MODE ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonCircle(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == ELLIPSE_MODE ? 1 : 0);
+}
