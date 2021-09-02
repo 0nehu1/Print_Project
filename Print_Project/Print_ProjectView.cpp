@@ -602,7 +602,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 			dc.SelectObject(&pen);
 			dc.SelectObject(&brush);
 		    //dc.SelectObject(&brush);
-			dc.Rectangle(point.x - 15, point.y - 15, point.x + 15, point.y + 15);
+			dc.Ellipse(point.x - 15, point.y - 15, point.x + 15, point.y + 15);
 			
 		
 			m_ptPrev = point;			//이전 점에 현재 점을 저장
