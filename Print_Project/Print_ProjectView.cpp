@@ -1034,3 +1034,10 @@ void CPrintProjectView::OnUpdateButtonLinecontrol(CCmdUI* pCmdUI)
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
 	pCmdUI->SetCheck(m_nPenSize != 1 ? 1 : 0);
 }
+
+
+void CPrintProjectView::OnUpdateButtonLinecontrol(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nPenSize != 1 ? 1 : 0);
+}
