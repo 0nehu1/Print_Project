@@ -164,7 +164,8 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 	switch (m_nDrawMode)
 	{
 	case PENCIL_MODE:
-
+		oldpen = pDC->SelectObject(&pen);	
+		oldbrush = pDC->SelectObject(&brush);
 			break;
 	case LINE_MODE:
 		pDC->MoveTo(m_ptStart);
@@ -207,11 +208,22 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 		//pDC->LineTo(m_ptPrev.x, m_ptPrev.y);
 		//pDC->Polygon(m_ptData, m_nCount);
 		break;
+	case ERASER_MODE:
+		CPen pen;
+		CBrush brush(RGB(255, 255, 255));
+		//현재 직선 그림
+		pen.CreatePen(PS_SOLID, 10, RGB(255, 255, 255));
+		 pDC->SelectObject(&pen);
+		pDC->SelectObject(&brush);
+		
+		break;
 	}
 	pDC->SelectObject(oldpen);		//이전 pen으로 설정
 	pDC->SelectObject(oldbrush);	//이전 brush로 설정
 	pen.DeleteObject();				//pen 객체 삭제
 	brush.DeleteObject();			//brush 객체 삭제
+
+	
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 }
@@ -452,7 +464,7 @@ void CPrintProjectView::OnButtonRoundrect()
 void CPrintProjectView::OnButtonEraser()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	
+	m_nDrawMode = 4;
 
 }
 
@@ -582,6 +594,19 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 			m_ptPrev = point;			//이전 점에 현재 점을 저장
 		}
 		break;
+
+	case ERASER_MODE:
+		if (m_bLButtonDown)
+		{
+			pen.DeleteObject();					//pen 객체 삭제
+			brush.DeleteObject();				//brush 객체 삭제
+			
+		    //dc.SelectObject(&brush);
+			dc.Rectangle(point.x - 15, point.y - 15, point.x + 15, point.y + 15);
+			
+		
+			m_ptPrev = point;			//이전 점에 현재 점을 저장
+		}
 
 	case ELLIPSE_MODE:					//원 그리기
 		if (m_bLButtonDown)
@@ -725,6 +750,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 	case HALFCIRCLE_HORIZONTAL_MODE:
 	case HALFCIRCLE_VERTICAL_MODE:
 	case PIERECT270_MODE:
+	case ERASER_MODE:
 		m_bLButtonDown = true;			//왼쪽 버튼 눌림
 		m_ptStart = m_ptPrev = point;	//시작 점과 이전 점에 현재 점을 저장
 		m_bFirst = false;				//처음 그리는 것 -> false
@@ -755,7 +781,7 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 		if (m_nDrawMode == PENCIL_MODE || m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE 
 			||m_nDrawMode == TRIANGLE_MODE || m_nDrawMode == RIGHTTRIANGLE_MODE || m_nDrawMode == ROUNDRECT_MODE 
 			|| m_nDrawMode == PIERECT_MODE || m_nDrawMode == HALFCIRCLE_HORIZONTAL_MODE || m_nDrawMode == HALFCIRCLE_VERTICAL_MODE
-			|| m_nDrawMode == PIERECT270_MODE)
+			|| m_nDrawMode == PIERECT270_MODE|| m_nDrawMode == ERASER_MODE)
 		{
 			m_bLButtonDown = false;
 			m_bFirst = true;
