@@ -1038,6 +1038,8 @@ void CPrintProjectView::OnButtonHorizontal()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	m_bHatch= true;
 	m_nHatchStyle = HS_HORIZONTAL;
+	if(m_BrushColor == RGB(255,255,255))
+	m_BrushColor = BLACK_BRUSH;
 }
 
 
@@ -1046,6 +1048,8 @@ void CPrintProjectView::OnButtonVertical()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	m_bHatch = true;
 	m_nHatchStyle = HS_VERTICAL;
+	if (m_BrushColor == RGB(255, 255, 255))
+	m_BrushColor = BLACK_BRUSH;
 }
 
 
@@ -1054,6 +1058,8 @@ void CPrintProjectView::OnButtonBdiagonal()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	m_bHatch = true;
 	m_nHatchStyle = HS_BDIAGONAL;
+	if (m_BrushColor == RGB(255, 255, 255))
+	m_BrushColor = BLACK_BRUSH;
 }
 
 
@@ -1062,6 +1068,8 @@ void CPrintProjectView::OnButtonFdiagonal()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	m_bHatch = true;
 	m_nHatchStyle = HS_FDIAGONAL;
+	if (m_BrushColor == RGB(255, 255, 255))
+	m_BrushColor = BLACK_BRUSH;
 }
 
 
@@ -1070,6 +1078,8 @@ void CPrintProjectView::OnButtonCross()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	m_bHatch= true;
 	m_nHatchStyle = HS_CROSS;
+	if (m_BrushColor == RGB(255, 255, 255))
+	m_BrushColor = BLACK_BRUSH;
 }
 
 
@@ -1078,6 +1088,8 @@ void CPrintProjectView::OnButtonDiagcross()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	m_bHatch = true;
 	m_nHatchStyle = HS_DIAGCROSS;
+	if (m_BrushColor == RGB(255, 255, 255))
+	m_BrushColor = BLACK_BRUSH;
 }
 
 
