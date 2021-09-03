@@ -102,6 +102,15 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_COMMAND(ID_BUTTON_CROSS, &CPrintProjectView::OnButtonCross)
 	ON_COMMAND(ID_BUTTON_DIAGCROSS, &CPrintProjectView::OnButtonDiagcross)
 	ON_COMMAND(ID_BUTTON_HATCH, &CPrintProjectView::OnButtonHatch)
+	ON_COMMAND(ID_BUTTON_DEFAULT, &CPrintProjectView::OnButtonDefault)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_HORIZONTAL, &CPrintProjectView::OnUpdateButtonHorizontal)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_VERTICAL, &CPrintProjectView::OnUpdateButtonVertical)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_HATCH, &CPrintProjectView::OnUpdateButtonHatch)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_BDIAGONAL, &CPrintProjectView::OnUpdateButtonBdiagonal)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_FDIAGONAL, &CPrintProjectView::OnUpdateButtonFdiagonal)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_CROSS, &CPrintProjectView::OnUpdateButtonCross)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_DIAGCROSS, &CPrintProjectView::OnUpdateButtonDiagcross)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_DEFAULT, &CPrintProjectView::OnUpdateButtonDefault)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -128,7 +137,7 @@ CPrintProjectView::CPrintProjectView()
 	}
 	//같은 거 memset(m_ptData, 0, sizeof(CPoint) * 100);
 
-	m_nHatchStyle = HS_CROSS;
+	
 	m_PenColor = RGB(0, 0, 0); //black
 	m_BrushColor = RGB(255, 255, 255); //white
 
@@ -1031,6 +1040,11 @@ void CPrintProjectView::OnUpdateButtonLinecontrol(CCmdUI* pCmdUI)
 
 
 
+void CPrintProjectView::OnButtonDefault()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_bHatch = false;
+}
 void CPrintProjectView::OnButtonHorizontal()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
@@ -1082,4 +1096,62 @@ void CPrintProjectView::OnButtonDiagcross()
 void CPrintProjectView::OnButtonHatch()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+
+
+
+void CPrintProjectView::OnUpdateButtonHorizontal(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nHatchStyle == HS_HORIZONTAL ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonVertical(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nHatchStyle == HS_VERTICAL ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonHatch(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_bHatch == true ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonBdiagonal(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nHatchStyle == HS_BDIAGONAL ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonFdiagonal(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nHatchStyle == HS_FDIAGONAL ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonCross(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nHatchStyle == HS_CROSS ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonDiagcross(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nHatchStyle == HS_DIAGCROSS ? 1 : 0);
+}
+
+
+void CPrintProjectView::OnUpdateButtonDefault(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_bHatch == false ? 1 : 0);
 }

@@ -145,6 +145,15 @@ public:
 	afx_msg void OnButtonCross();
 	afx_msg void OnButtonDiagcross();
 	afx_msg void OnButtonHatch();
+	afx_msg void OnButtonDefault();
+	afx_msg void OnUpdateButtonHorizontal(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonVertical(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonHatch(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonBdiagonal(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonFdiagonal(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonCross(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonDiagcross(CCmdUI* pCmdUI);
+	afx_msg void OnUpdateButtonDefault(CCmdUI* pCmdUI);
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전
