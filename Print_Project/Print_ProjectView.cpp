@@ -191,7 +191,8 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 	pDC->SetROP2(R2_COPYPEN);				//COPTPEN으로 설정
 
 	CBrush brush, * oldbrush;
-	if (m_bHatch==true)		//brush 객체 생성
+
+	if (m_bHatch)		//brush 객체 생성
 		brush.CreateHatchBrush(m_nHatchStyle, m_BrushColor);
 	else				//brush 객체 등록
 		brush.CreateSolidBrush(m_BrushColor);
@@ -581,7 +582,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	//dc.SetROP2(R2_NOTXORPEN);					//R2_NOTXORPEN으로 설정
 	//dc.SetROP2(R2_COPYPEN);				
 	CBrush brush, * oldbrush;
-	if (m_bHatch==true)
+	if (m_bHatch)
 		brush.CreateHatchBrush(m_nHatchStyle, m_PenColor); //Hatch Brush 객체 생성
 	else
 		brush.CreateSolidBrush(m_PenColor);				 //Solid Brush 객체 생성
@@ -593,12 +594,10 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case PENCIL_MODE:						//직선 그리기
 		if (m_bLButtonDown)
 		{
-			
 			dc.SetROP2(R2_NOTXORPEN);
 			dc.MoveTo(m_ptPrev);
 			dc.LineTo(point);			//현재 직선 그림
 			m_ptPrev = point;			//이전 점에 현재 점을 저장
-		
 		}
 		break;
 
@@ -650,7 +649,6 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 			dc.Rectangle(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
 			dc.Rectangle(m_ptStart.x, m_ptStart.y, point.x, point.y);
 			m_ptPrev = point;
-
 		}
 		break;
 	case ROUNDRECT_MODE:
@@ -660,7 +658,6 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 			dc.RoundRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y,50,50);
 			dc.RoundRect(m_ptStart.x, m_ptStart.y, point.x, point.y,50,50);
 			m_ptPrev = point;
-
 		}
 		break;
 	case PIERECT_MODE:
@@ -674,7 +671,6 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 		//dc.Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
 		//dc.Pie(PieRect, CPoint(PieRect.CenterPoint().x, PieRect.top), CPoint(point.x, point.y));
 		m_ptPrev = point;
-
 	}
 	case PIERECT270_MODE:
 		if (m_bLButtonDown)
@@ -686,7 +682,6 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 			dc.Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
 			
 			m_ptPrev = point;
-
 		}
 	break;
 	case HALFCIRCLE_HORIZONTAL_MODE:
@@ -725,9 +720,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 			dc.Polygon(arPt1, 3);
 			dc.Polygon(arPt2, 3);
 			
-
 			m_ptPrev = point;
-			
 		}
 		break;
 
@@ -738,7 +731,6 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	
 			POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x, m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
 			POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x, point.y},{point.x, point.y} };
-
 
 			dc.Polygon(arPt1, 3);
 			dc.Polygon(arPt2, 3);
@@ -787,7 +779,6 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 		m_bFirst = false;				//처음 그리는 것 -> false
 		//m_bHatch = true;
 		break;
-
 	}
 
 	//러버밴드 때문에 추가
@@ -807,10 +798,10 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	if (m_bLButtonDown)
 	{
-		if (m_nDrawMode == PENCIL_MODE || m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE 
-			||m_nDrawMode == TRIANGLE_MODE || m_nDrawMode == RIGHTTRIANGLE_MODE || m_nDrawMode == ROUNDRECT_MODE 
+		if (m_nDrawMode == PENCIL_MODE || m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE
+			|| m_nDrawMode == TRIANGLE_MODE || m_nDrawMode == RIGHTTRIANGLE_MODE || m_nDrawMode == ROUNDRECT_MODE
 			|| m_nDrawMode == PIERECT_MODE || m_nDrawMode == HALFCIRCLE_HORIZONTAL_MODE || m_nDrawMode == HALFCIRCLE_VERTICAL_MODE
-			|| m_nDrawMode == PIERECT270_MODE|| m_nDrawMode == ERASER_MODE)
+			|| m_nDrawMode == PIERECT270_MODE || m_nDrawMode == ERASER_MODE)
 		{
 			m_bLButtonDown = false;
 			m_bFirst = true;
@@ -819,10 +810,7 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 			::ClipCursor(NULL);		//마우스 클립 해제
 			Invalidate(false);		//화면 갱신
 		}
-	
-		
 	}
-	
 	CView::OnLButtonUp(nFlags, point);
 }
 
@@ -1111,6 +1099,7 @@ void CPrintProjectView::OnUpdateButtonHorizontal(CCmdUI* pCmdUI)
 void CPrintProjectView::OnUpdateButtonVertical(CCmdUI* pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (m_bHatch == true)
 	pCmdUI->SetCheck(m_nHatchStyle == HS_VERTICAL ? 1 : 0);
 }
 
@@ -1118,6 +1107,7 @@ void CPrintProjectView::OnUpdateButtonVertical(CCmdUI* pCmdUI)
 void CPrintProjectView::OnUpdateButtonHatch(CCmdUI* pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (m_bHatch == true)
 	pCmdUI->SetCheck(m_bHatch == true ? 1 : 0);
 }
 
@@ -1125,6 +1115,7 @@ void CPrintProjectView::OnUpdateButtonHatch(CCmdUI* pCmdUI)
 void CPrintProjectView::OnUpdateButtonBdiagonal(CCmdUI* pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (m_bHatch == true)
 	pCmdUI->SetCheck(m_nHatchStyle == HS_BDIAGONAL ? 1 : 0);
 }
 
@@ -1132,6 +1123,7 @@ void CPrintProjectView::OnUpdateButtonBdiagonal(CCmdUI* pCmdUI)
 void CPrintProjectView::OnUpdateButtonFdiagonal(CCmdUI* pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (m_bHatch == true)
 	pCmdUI->SetCheck(m_nHatchStyle == HS_FDIAGONAL ? 1 : 0);
 }
 
@@ -1139,6 +1131,7 @@ void CPrintProjectView::OnUpdateButtonFdiagonal(CCmdUI* pCmdUI)
 void CPrintProjectView::OnUpdateButtonCross(CCmdUI* pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if (m_bHatch == true)
 	pCmdUI->SetCheck(m_nHatchStyle == HS_CROSS ? 1 : 0);
 }
 
@@ -1146,6 +1139,7 @@ void CPrintProjectView::OnUpdateButtonCross(CCmdUI* pCmdUI)
 void CPrintProjectView::OnUpdateButtonDiagcross(CCmdUI* pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	if(m_bHatch == true)
 	pCmdUI->SetCheck(m_nHatchStyle == HS_DIAGCROSS ? 1 : 0);
 }
 
