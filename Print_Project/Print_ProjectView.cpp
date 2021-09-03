@@ -214,21 +214,20 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 	case PIERECT270_MODE:
 		pDC->Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
 		break;
-	case TRIANGLE_MODE:
-		//pDC->MoveTo(m_ptStart.x,m_ptStart.y);
-		//pDC->LineTo(m_ptPrev.x,m_ptPrev.y);
-		
-		//pDC->Polygon(m_ptData, m_nCount);
-		break;
 
-	case RIGHTTRIANGLE_MODE:
-		//pDC->MoveTo(m_ptStart.x, m_ptStart.y);
-		//pDC->LineTo(m_ptPrev.x, m_ptPrev.y);
-		//pDC->Polygon(m_ptData, m_nCount);
+	case TRIANGLE_MODE:
+	
+		POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{(m_ptPrev.x - m_ptStart.x) , m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
+		pDC->Polygon(arPt1, 3);
+
 		break;
-	case ERASER_MODE:
-		
-		
+	
+	}
+	switch (m_nDrawMode)
+	{
+	case RIGHTTRIANGLE_MODE:
+		POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x, m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
+		pDC->Polygon(arPt2, 3);
 		break;
 	}
 	pDC->SelectObject(oldpen);		//이전 pen으로 설정
@@ -335,18 +334,6 @@ void CPrintProjectView::OnButtonColorfill()
 
 
 
-void CPrintProjectView::OnComboFigure()
-{
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
-
-
-void CPrintProjectView::OnComboLinestyle()
-{
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-
-
-}
 
 
 void CPrintProjectView::OnButtonColor()
@@ -709,18 +696,19 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	case TRIANGLE_MODE:
 		if (m_bLButtonDown)
 		{
-			dc.SetROP2(R2_NOTXORPEN);
-			//dc.MoveTo(m_ptStart.x, m_ptStart.y);
-			//dc.LineTo(m_ptPrev.x, m_ptPrev.y);
-			//dc.MoveTo(m_ptStart.x,m_ptStart.y);
-			//dc.LineTo(point.x,point.y);			//현재 직선 그림
-			POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{(m_ptPrev.x - m_ptStart.x) / 2, m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
-			POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{(point.x - m_ptStart.x) / 2,point.y},{point.x, point.y} };
 			
-
+			dc.SetROP2(R2_NOTXORPEN);
+			
+			POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{(m_ptPrev.x - m_ptStart.x) , m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
+			POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{(point.x - m_ptStart.x) ,point.y},{point.x, point.y} };
+			
+			
 			dc.Polygon(arPt1, 3);
 			dc.Polygon(arPt2, 3);
+			
+
 			m_ptPrev = point;
+			
 		}
 		break;
 
@@ -728,10 +716,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 		if (m_bLButtonDown)
 		{
 			dc.SetROP2(R2_NOTXORPEN);
-			//dc.MoveTo(m_ptStart.x, m_ptStart.y);
-			//dc.LineTo(m_ptPrev.x, m_ptPrev.y);
-			//dc.MoveTo(m_ptStart.x,m_ptStart.y);
-			//dc.LineTo(point.x,point.y);			//현재 직선 그림
+	
 			POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x, m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
 			POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x, point.y},{point.x, point.y} };
 
@@ -783,9 +768,6 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 		m_bFirst = false;				//처음 그리는 것 -> false
 		break;
 
-	
-
-	
 	}
 
 	//러버밴드 때문에 추가
