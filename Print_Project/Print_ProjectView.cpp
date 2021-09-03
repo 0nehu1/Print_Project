@@ -217,7 +217,8 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 
 	case TRIANGLE_MODE:
 	
-		POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{(m_ptPrev.x - m_ptStart.x) , m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
+		//POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x , m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
+		POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{ (m_ptPrev.x -m_ptStart.x), m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
 		pDC->Polygon(arPt1, 3);
 
 		break;
@@ -699,10 +700,11 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 			
 			dc.SetROP2(R2_NOTXORPEN);
 			
-			POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{(m_ptPrev.x - m_ptStart.x) , m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
-			POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{(point.x - m_ptStart.x) ,point.y},{point.x, point.y} };
+			//POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x  , m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
+			//POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x , point.y},{point.x, point.y} };
 			
-			
+			POINT arPt1[4] = { {m_ptStart.x, m_ptStart.y}, { (m_ptPrev.x - m_ptStart.x), m_ptPrev.y }, { m_ptPrev.x, m_ptPrev.y } };
+			POINT arPt2[4] = { {m_ptStart.x, m_ptStart.y}, { (point.x - m_ptStart.x), point.y }, { point.x, point.y } };
 			dc.Polygon(arPt1, 3);
 			dc.Polygon(arPt2, 3);
 			
