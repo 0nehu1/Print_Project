@@ -95,6 +95,13 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_LINESTYLE, &CPrintProjectView::OnUpdateButtonLinestyle)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_FIGURE, &CPrintProjectView::OnUpdateButtonFigure)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_LINECONTROL, &CPrintProjectView::OnUpdateButtonLinecontrol)
+	ON_COMMAND(ID_BUTTON_HORIZONTAL, &CPrintProjectView::OnButtonHorizontal)
+	ON_COMMAND(ID_BUTTON_VERTICAL, &CPrintProjectView::OnButtonVertical)
+	ON_COMMAND(ID_BUTTON_BDIAGONAL, &CPrintProjectView::OnButtonBdiagonal)
+	ON_COMMAND(ID_BUTTON_FDIAGONAL, &CPrintProjectView::OnButtonFdiagonal)
+	ON_COMMAND(ID_BUTTON_CROSS, &CPrintProjectView::OnButtonCross)
+	ON_COMMAND(ID_BUTTON_DIAGCROSS, &CPrintProjectView::OnButtonDiagcross)
+	ON_COMMAND(ID_BUTTON_HATCH, &CPrintProjectView::OnButtonHatch)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -175,10 +182,11 @@ void CPrintProjectView::OnDraw(CDC* pDC)
 	pDC->SetROP2(R2_COPYPEN);				//COPTPEN으로 설정
 
 	CBrush brush, * oldbrush;
-	if (m_bHatch)		//brush 객체 생성
+	if (m_bHatch==true)		//brush 객체 생성
 		brush.CreateHatchBrush(m_nHatchStyle, m_BrushColor);
 	else				//brush 객체 등록
 		brush.CreateSolidBrush(m_BrushColor);
+
 	oldbrush = pDC->SelectObject(&brush);
 	CRect PieRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
 	switch (m_nDrawMode)
@@ -564,7 +572,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	//dc.SetROP2(R2_NOTXORPEN);					//R2_NOTXORPEN으로 설정
 	//dc.SetROP2(R2_COPYPEN);				
 	CBrush brush, * oldbrush;
-	if (m_bHatch)
+	if (m_bHatch==true)
 		brush.CreateHatchBrush(m_nHatchStyle, m_PenColor); //Hatch Brush 객체 생성
 	else
 		brush.CreateSolidBrush(m_PenColor);				 //Solid Brush 객체 생성
@@ -768,6 +776,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 		m_bLButtonDown = true;			//왼쪽 버튼 눌림
 		m_ptStart = m_ptPrev = point;	//시작 점과 이전 점에 현재 점을 저장
 		m_bFirst = false;				//처음 그리는 것 -> false
+		//m_bHatch = true;
 		break;
 
 	}
@@ -796,6 +805,7 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 		{
 			m_bLButtonDown = false;
 			m_bFirst = true;
+			//m_bHatch = true;
 			ReleaseCapture();		//마우스 캡처 해제
 			::ClipCursor(NULL);		//마우스 클립 해제
 			Invalidate(false);		//화면 갱신
@@ -1019,3 +1029,57 @@ void CPrintProjectView::OnUpdateButtonLinecontrol(CCmdUI* pCmdUI)
 	pCmdUI->SetCheck(m_nPenSize != 1 ? 1 : 0);
 }
 
+
+
+void CPrintProjectView::OnButtonHorizontal()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_bHatch= true;
+	m_nHatchStyle = HS_HORIZONTAL;
+}
+
+
+void CPrintProjectView::OnButtonVertical()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_bHatch = true;
+	m_nHatchStyle = HS_VERTICAL;
+}
+
+
+void CPrintProjectView::OnButtonBdiagonal()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_bHatch = true;
+	m_nHatchStyle = HS_BDIAGONAL;
+}
+
+
+void CPrintProjectView::OnButtonFdiagonal()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_bHatch = true;
+	m_nHatchStyle = HS_FDIAGONAL;
+}
+
+
+void CPrintProjectView::OnButtonCross()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_bHatch= true;
+	m_nHatchStyle = HS_CROSS;
+}
+
+
+void CPrintProjectView::OnButtonDiagcross()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_bHatch = true;
+	m_nHatchStyle = HS_DIAGCROSS;
+}
+
+
+void CPrintProjectView::OnButtonHatch()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}

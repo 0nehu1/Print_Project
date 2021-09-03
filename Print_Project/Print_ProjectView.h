@@ -138,6 +138,13 @@ public:
 	afx_msg void OnUpdateButtonLinestyle(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateButtonFigure(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateButtonLinecontrol(CCmdUI* pCmdUI);
+	afx_msg void OnButtonHorizontal();
+	afx_msg void OnButtonVertical();
+	afx_msg void OnButtonBdiagonal();
+	afx_msg void OnButtonFdiagonal();
+	afx_msg void OnButtonCross();
+	afx_msg void OnButtonDiagcross();
+	afx_msg void OnButtonHatch();
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전
