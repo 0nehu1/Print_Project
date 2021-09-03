@@ -342,7 +342,7 @@ void CPrintProjectView::OnButtonRotate()
 void CPrintProjectView::OnButtonColorfill()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	CColorDialog dlgColor;
+	CColorDialog dlgColor(m_BrushColor, CC_FULLOPEN);
 	if (dlgColor.DoModal() == IDOK)
 	{
 		m_BrushColor = dlgColor.GetColor();
@@ -364,7 +364,7 @@ void CPrintProjectView::OnButtonColor()
 	//COLORREF m_BrushColor = dlg.GetColor();
 	//COLORREF m_PenColor = dlg.GetColor();
 
-	CColorDialog dlgColor;
+	CColorDialog dlgColor(m_PenColor, CC_FULLOPEN);
 	if (dlgColor.DoModal() == IDOK)
 	{
 		m_PenColor = dlgColor.GetColor();
