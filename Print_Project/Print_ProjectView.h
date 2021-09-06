@@ -11,7 +11,8 @@
 
 // Print_ProjectView.h: CPrintProjectView 클래스의 인터페이스
 //
-
+#include <vector>
+#include <memory>
 #pragma once
 enum DRAW_MODE { PENCIL_MODE,LINE_MODE, ELLIPSE_MODE, RECTANGLE_MODE , ERASER_MODE
 	, TRIANGLE_MODE, RIGHTTRIANGLE_MODE, ROUNDRECT_MODE,PIERECT_MODE,HALFCIRCLE_HORIZONTAL_MODE, HALFCIRCLE_VERTICAL_MODE
@@ -154,6 +155,11 @@ public:
 	afx_msg void OnUpdateButtonCross(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateButtonDiagcross(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateButtonDefault(CCmdUI* pCmdUI);
+	afx_msg void OnFileSave();
+
+	std::shared_ptr<Gdiplus::Bitmap> m_canvasAfterDrawing;
+	std::shared_ptr<Gdiplus::Bitmap> m_canvasDuringDraw;
+
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전

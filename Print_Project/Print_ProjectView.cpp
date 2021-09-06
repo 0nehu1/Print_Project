@@ -28,7 +28,8 @@
 #endif
 #include "MainFrm.h"
 #include "LineControl.h"
-
+#include <vector>
+#include <memory>
 // CPrintProjectView
 
 IMPLEMENT_DYNCREATE(CPrintProjectView, CView)
@@ -111,6 +112,7 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_CROSS, &CPrintProjectView::OnUpdateButtonCross)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_DIAGCROSS, &CPrintProjectView::OnUpdateButtonDiagcross)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_DEFAULT, &CPrintProjectView::OnUpdateButtonDefault)
+	ON_COMMAND(ID_FILE_SAVE, &CPrintProjectView::OnFileSave)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -1161,3 +1163,28 @@ void CPrintProjectView::OnUpdateButtonDefault(CCmdUI* pCmdUI)
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
 	pCmdUI->SetCheck(m_bHatch == false ? 1 : 0);
 }
+
+
+void CPrintProjectView::OnFileSave()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CString filter = _T("Bitmap(*.BMP)|*.BMP|JPEG(*.JPG)|*.JPG|PNG Files(*.png)|*.png||");
+	CFileDialog dlg(FALSE, _T(""), _T(""), OFN_HIDEREADONLY, filter);
+	if (dlg.DoModal() == IDOK)
+	{
+		CLSID clsid;
+		CString extension = dlg.GetFileExt();
+		if (extension == _T("BMP"))
+			CLSIDFromString(_T("{557cf400-1a04-11d3-9a73-0000f81ef32e}"), &clsid);
+		else if (extension == _T("JPG"))
+			CLSIDFromString(_T("{557cf401-1a04-11d3-9a73-0000f81ef32e}"), &clsid);
+		else if (extension == _T("PNG"))
+			CLSIDFromString(_T("{557cf406-1a04-11d3-9a73-0000f81ef32e}"), &clsid);
+
+		m_canvasAfterDrawing.get()->Save(dlg.GetPathName(), &clsid, NULL);
+	}
+}
+
+
+
