@@ -28,7 +28,7 @@ protected: // serialization에서만 만들어집니다.
 // 특성입니다.
 public:
 	CPrintProjectDoc* GetDocument() const;
-
+	int m_nZoomRate; // 확대/축소 비율
 // 작업입니다.
 public:
 
@@ -161,6 +161,7 @@ public:
 	std::shared_ptr<Gdiplus::Bitmap> m_canvasDuringDraw;
 
 	afx_msg void OnPaint();
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전

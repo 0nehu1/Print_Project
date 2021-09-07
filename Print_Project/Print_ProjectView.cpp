@@ -114,6 +114,7 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_DEFAULT, &CPrintProjectView::OnUpdateButtonDefault)
 	ON_COMMAND(ID_FILE_SAVE, &CPrintProjectView::OnFileSave)
 	ON_WM_PAINT()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -143,6 +144,7 @@ CPrintProjectView::CPrintProjectView()
 	
 	m_PenColor = RGB(0, 0, 0); //black
 	m_BrushColor = RGB(255, 255, 255); //white
+	m_nZoomRate = 100;
 
 }
 
@@ -650,7 +652,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 
 	pen.DeleteObject();					//pen 객체 삭제
 	brush.DeleteObject();				//brush 객체 삭제
-
+	//Invalidate(false);
 	CView::OnMouseMove(nFlags, point);
 }
 
@@ -695,7 +697,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 	GetClientRect(&rectClient);			//클라이언트 영역 받음
 	ClientToScreen(&rectClient);		//스크린 좌표계 변환
 	::ClipCursor(&rectClient);			//마우스 이동 범위를 클라이언트 영역으로 제한
-
+	Invalidate(false);
 	CView::OnLButtonDown(nFlags, point);
 }
 
@@ -719,6 +721,7 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 			Invalidate(false);		//화면 갱신
 		}
 	}
+	Invalidate(false);
 	CView::OnLButtonUp(nFlags, point);
 }
 
@@ -1102,6 +1105,13 @@ void CPrintProjectView::OnPaint()
 					   // TODO: 여기에 메시지 처리기 코드를 추가합니다.
 					   // 그리기 메시지에 대해서는 CView::OnPaint()을(를) 호출하지 마십시오.
 
+	dc.SetMapMode(MM_ISOTROPIC);
+
+	dc.SetWindowExt(100, 100);
+	
+	dc.SetViewportExt(m_nZoomRate, m_nZoomRate);
+	//dc.SetViewportOrg(300, 300);
+
 	CPrintProjectDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
@@ -1199,4 +1209,25 @@ void CPrintProjectView::OnPaint()
 
 
 
+}
+
+
+BOOL CPrintProjectView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if((nFlags & MK_CONTROL) != MK_CONTROL)
+		return CView::OnMouseWheel(nFlags, zDelta, pt);
+	if (zDelta < 0)
+	{
+		m_nZoomRate += 10;
+		if (m_nZoomRate > 300) m_nZoomRate = 300;
+	}
+	else
+	{
+		m_nZoomRate -= 10;
+		if (m_nZoomRate < 1) m_nZoomRate = 1;
+	}
+
+	RedrawWindow();
+	return CView::OnMouseWheel(nFlags, zDelta, pt);
 }
