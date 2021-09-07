@@ -257,7 +257,7 @@ void CPrintProjectView::OnButtonColorfill()
 	{
 		m_BrushColor = dlgColor.GetColor();
 	}
-	Invalidate(false);
+	//Invalidate(false);
 }
 
 
@@ -279,7 +279,7 @@ void CPrintProjectView::OnButtonColor()
 	{
 		m_PenColor = dlgColor.GetColor();
 	}
-	Invalidate(false);
+	//Invalidate(false);
 	
 }
 
@@ -652,7 +652,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 
 	pen.DeleteObject();					//pen 객체 삭제
 	brush.DeleteObject();				//brush 객체 삭제
-	//Invalidate(false);
+	//Invalidate(FALSE);
 	CView::OnMouseMove(nFlags, point);
 }
 
@@ -688,6 +688,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 		m_ptStart = m_ptPrev = point;	//시작 점과 이전 점에 현재 점을 저장
 		m_bFirst = false;				//처음 그리는 것 -> false
 		//m_bHatch = true;
+		Invalidate(false);
 		break;
 	}
 
@@ -697,7 +698,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 	GetClientRect(&rectClient);			//클라이언트 영역 받음
 	ClientToScreen(&rectClient);		//스크린 좌표계 변환
 	::ClipCursor(&rectClient);			//마우스 이동 범위를 클라이언트 영역으로 제한
-	Invalidate(false);
+	
 	CView::OnLButtonDown(nFlags, point);
 }
 
@@ -721,7 +722,7 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 			Invalidate(false);		//화면 갱신
 		}
 	}
-	Invalidate(false);
+
 	CView::OnLButtonUp(nFlags, point);
 }
 
@@ -1207,7 +1208,7 @@ void CPrintProjectView::OnPaint()
 	pen.DeleteObject();				//pen 객체 삭제
 	brush.DeleteObject();			//brush 객체 삭제
 
-
+	//Invalidate();
 
 }
 
@@ -1230,4 +1231,5 @@ BOOL CPrintProjectView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 	RedrawWindow();
 	return CView::OnMouseWheel(nFlags, zDelta, pt);
+	Invalidate(false);
 }
