@@ -113,6 +113,7 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_DIAGCROSS, &CPrintProjectView::OnUpdateButtonDiagcross)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_DEFAULT, &CPrintProjectView::OnUpdateButtonDefault)
 	ON_COMMAND(ID_FILE_SAVE, &CPrintProjectView::OnFileSave)
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -161,101 +162,6 @@ BOOL CPrintProjectView::PreCreateWindow(CREATESTRUCT& cs)
 
 void CPrintProjectView::OnDraw(CDC* pDC)
 {
-	CPrintProjectDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
-
-
-	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
-	CPen pen, * oldpen;
-	switch (m_nPenMode)
-	{
-	case 0:
-		pen.CreatePen(PS_SOLID, m_nPenSize, m_PenColor);	//pen 객체 생성
-		break;
-	case 1:
-		pen.CreatePen(PS_DASH, m_nPenSize, m_PenColor);	//pen 객체 생성
-		break;
-	case 2:
-		pen.CreatePen(PS_DOT, m_nPenSize, m_PenColor);	//pen 객체 생성
-		break;
-	case 3:
-		pen.CreatePen(PS_DASHDOT, m_nPenSize, m_PenColor);	//pen 객체 생성
-		break;
-	case 4:
-		pen.CreatePen(PS_DASHDOTDOT, m_nPenSize, m_PenColor);	//pen 객체 생성
-		break;
-	
-	}
-
-	oldpen = pDC->SelectObject(&pen);		//pen 객체 등록
-	pDC->SetROP2(R2_COPYPEN);				//COPTPEN으로 설정
-
-	CBrush brush, * oldbrush;
-
-	if (m_bHatch)		//brush 객체 생성
-		brush.CreateHatchBrush(m_nHatchStyle, m_BrushColor);
-	else				//brush 객체 등록
-		brush.CreateSolidBrush(m_BrushColor);
-
-	oldbrush = pDC->SelectObject(&brush);
-	CRect PieRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
-	switch (m_nDrawMode)
-	{
-	case PENCIL_MODE:
-			break;
-	case LINE_MODE:
-		pDC->MoveTo(m_ptStart);
-		pDC->LineTo(m_ptPrev);
-		break;
-	case ELLIPSE_MODE:
-		pDC->Ellipse(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
-		break;
-	case RECTANGLE_MODE:
-		pDC->Rectangle(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
-		break;
-		
-	case ROUNDRECT_MODE:
-		pDC->RoundRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y,50,50);
-		break;
-
-	case PIERECT_MODE:
-		pDC->Pie(PieRect, CPoint(PieRect.CenterPoint().x, m_ptStart.y), CPoint(m_ptStart.x, PieRect.CenterPoint().y));
-		//pDC->Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
-		break;
-	case HALFCIRCLE_HORIZONTAL_MODE:
-		pDC->Pie(PieRect, CPoint(m_ptPrev.x, PieRect.CenterPoint().y), CPoint(m_ptStart.x, PieRect.CenterPoint().y));
-		//pDC->Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
-		break;
-	case HALFCIRCLE_VERTICAL_MODE:
-		pDC->Pie(PieRect, CPoint(PieRect.CenterPoint().x, m_ptStart.y), CPoint(PieRect.CenterPoint().x, m_ptPrev.y));
-		break;
-	case PIERECT270_MODE:
-		pDC->Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
-		break;
-
-	case TRIANGLE_MODE:
-	
-		//POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x , m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
-		POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{ (m_ptPrev.x -m_ptStart.x), m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
-		pDC->Polygon(arPt1, 3);
-
-		break;
-	
-	}
-	switch (m_nDrawMode)
-	{
-	case RIGHTTRIANGLE_MODE:
-		POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x, m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
-		pDC->Polygon(arPt2, 3);
-		break;
-	}
-	pDC->SelectObject(oldpen);		//이전 pen으로 설정
-	pDC->SelectObject(oldbrush);	//이전 brush로 설정
-	pen.DeleteObject();				//pen 객체 삭제
-	brush.DeleteObject();			//brush 객체 삭제
-
 	
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
@@ -1188,3 +1094,109 @@ void CPrintProjectView::OnFileSave()
 
 
 
+
+
+void CPrintProjectView::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+					   // TODO: 여기에 메시지 처리기 코드를 추가합니다.
+					   // 그리기 메시지에 대해서는 CView::OnPaint()을(를) 호출하지 마십시오.
+
+	CPrintProjectDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	
+	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
+	CPen pen, * oldpen;
+	switch (m_nPenMode)
+	{
+	case 0:
+		pen.CreatePen(PS_SOLID, m_nPenSize, m_PenColor);	//pen 객체 생성
+		break;
+	case 1:
+		pen.CreatePen(PS_DASH, m_nPenSize, m_PenColor);	//pen 객체 생성
+		break;
+	case 2:
+		pen.CreatePen(PS_DOT, m_nPenSize, m_PenColor);	//pen 객체 생성
+		break;
+	case 3:
+		pen.CreatePen(PS_DASHDOT, m_nPenSize, m_PenColor);	//pen 객체 생성
+		break;
+	case 4:
+		pen.CreatePen(PS_DASHDOTDOT, m_nPenSize, m_PenColor);	//pen 객체 생성
+		break;
+
+	}
+
+	oldpen = dc.SelectObject(&pen);		//pen 객체 등록
+	dc.SetROP2(R2_COPYPEN);				//COPTPEN으로 설정
+
+	CBrush brush, * oldbrush;
+
+	if (m_bHatch)		//brush 객체 생성
+		brush.CreateHatchBrush(m_nHatchStyle, m_BrushColor);
+	else				//brush 객체 등록
+		brush.CreateSolidBrush(m_BrushColor);
+
+	oldbrush = dc.SelectObject(&brush);
+	CRect PieRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
+	switch (m_nDrawMode)
+	{
+	case PENCIL_MODE:
+		break;
+	case LINE_MODE:
+		dc.MoveTo(m_ptStart);
+		dc.LineTo(m_ptPrev);
+		break;
+	case ELLIPSE_MODE:
+		dc.Ellipse(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
+		break;
+	case RECTANGLE_MODE:
+		dc.Rectangle(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y);
+		break;
+
+	case ROUNDRECT_MODE:
+		dc.RoundRect(m_ptStart.x, m_ptStart.y, m_ptPrev.x, m_ptPrev.y, 50, 50);
+		break;
+
+	case PIERECT_MODE:
+		dc.Pie(PieRect, CPoint(PieRect.CenterPoint().x, m_ptStart.y), CPoint(m_ptStart.x, PieRect.CenterPoint().y));
+		//pDC->Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
+		break;
+	case HALFCIRCLE_HORIZONTAL_MODE:
+		dc.Pie(PieRect, CPoint(m_ptPrev.x, PieRect.CenterPoint().y), CPoint(m_ptStart.x, PieRect.CenterPoint().y));
+		//pDC->Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
+		break;
+	case HALFCIRCLE_VERTICAL_MODE:
+		dc.Pie(PieRect, CPoint(PieRect.CenterPoint().x, m_ptStart.y), CPoint(PieRect.CenterPoint().x, m_ptPrev.y));
+		break;
+	case PIERECT270_MODE:
+		dc.Pie(PieRect, CPoint(m_ptStart.x, PieRect.CenterPoint().y), CPoint(PieRect.CenterPoint().x, m_ptStart.y));
+		break;
+
+	case TRIANGLE_MODE:
+
+		//POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x , m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
+		POINT arPt1[4] = { {m_ptStart.x,m_ptStart.y},{ (m_ptPrev.x - m_ptStart.x), m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
+		dc.Polygon(arPt1, 3);
+
+		break;
+
+	}
+	switch (m_nDrawMode)
+	{
+	case RIGHTTRIANGLE_MODE:
+		POINT arPt2[4] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x, m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y} };
+		dc.Polygon(arPt2, 3);
+		break;
+	}
+	dc.SelectObject(oldpen);		//이전 pen으로 설정
+	dc.SelectObject(oldbrush);	//이전 brush로 설정
+	pen.DeleteObject();				//pen 객체 삭제
+	brush.DeleteObject();			//brush 객체 삭제
+
+
+
+}

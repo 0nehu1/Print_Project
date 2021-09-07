@@ -160,6 +160,7 @@ public:
 	std::shared_ptr<Gdiplus::Bitmap> m_canvasAfterDrawing;
 	std::shared_ptr<Gdiplus::Bitmap> m_canvasDuringDraw;
 
+	afx_msg void OnPaint();
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전
