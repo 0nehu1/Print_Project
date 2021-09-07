@@ -492,6 +492,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 	//dc.SetROP2(R2_NOTXORPEN);					//R2_NOTXORPEN으로 설정
 	//dc.SetROP2(R2_COPYPEN);				
 	CBrush brush, * oldbrush;
+
 	if (m_bHatch)
 		brush.CreateHatchBrush(m_nHatchStyle, m_PenColor); //Hatch Brush 객체 생성
 	else
@@ -508,6 +509,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 			dc.MoveTo(m_ptPrev);
 			dc.LineTo(point);			//현재 직선 그림
 			m_ptPrev = point;			//이전 점에 현재 점을 저장
+			
 		}
 		break;
 
@@ -520,6 +522,7 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 			dc.MoveTo(m_ptStart);
 			dc.LineTo(point);			//현재 직선 그림
 			m_ptPrev = point;			//이전 점에 현재 점을 저장
+			
 		}
 		break;
 
@@ -667,7 +670,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 		m_nCount = 0;
 		for (int i = 0; i < 100; i++)
 			m_ptData[i] = 0;
-		Invalidate(false);		//화면갱신
+		//Invalidate(false);		//화면갱신
 	}
 
 	switch (m_nDrawMode)
@@ -688,7 +691,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 		m_ptStart = m_ptPrev = point;	//시작 점과 이전 점에 현재 점을 저장
 		m_bFirst = false;				//처음 그리는 것 -> false
 		//m_bHatch = true;
-		Invalidate(false);
+		//Invalidate(false);
 		break;
 	}
 
@@ -1156,6 +1159,7 @@ void CPrintProjectView::OnPaint()
 	switch (m_nDrawMode)
 	{
 	case PENCIL_MODE:
+
 		break;
 	case LINE_MODE:
 		dc.MoveTo(m_ptStart);
@@ -1207,7 +1211,7 @@ void CPrintProjectView::OnPaint()
 	dc.SelectObject(oldbrush);	//이전 brush로 설정
 	pen.DeleteObject();				//pen 객체 삭제
 	brush.DeleteObject();			//brush 객체 삭제
-
+	//Invalidate(false);
 	//Invalidate();
 
 }
@@ -1231,5 +1235,5 @@ BOOL CPrintProjectView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 	RedrawWindow();
 	return CView::OnMouseWheel(nFlags, zDelta, pt);
-	Invalidate(false);
+	//Invalidate(false);
 }
