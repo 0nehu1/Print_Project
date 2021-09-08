@@ -34,6 +34,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CMainFrame::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CMainFrame::OnFilePrintPreview)
 	ON_UPDATE_COMMAND_UI(ID_FILE_PRINT_PREVIEW, &CMainFrame::OnUpdateFilePrintPreview)
+	ON_WM_GETMINMAXINFO()
 END_MESSAGE_MAP()
 
 // CMainFrame 생성/소멸
@@ -42,6 +43,7 @@ CMainFrame::CMainFrame() noexcept
 {
 	// TODO: 여기에 멤버 초기화 코드를 추가합니다.
 	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_WINDOWS_7);
+	
 }
 
 CMainFrame::~CMainFrame()
@@ -50,6 +52,7 @@ CMainFrame::~CMainFrame()
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
+	
 	if (CFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
@@ -214,4 +217,20 @@ void CMainFrame::OnFilePrintPreview()
 void CMainFrame::OnUpdateFilePrintPreview(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(IsPrintPreview());
+}
+
+
+void CMainFrame::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	//lpMMI->ptMinTrackSize.x = 800;
+//	lpMMI->ptMinTrackSize.y = 600;
+
+	//lpMMI->ptMinTrackSize.x = 1024;
+	//lpMMI->ptMinTrackSize.y = 768; 
+	//lpMMI->ptMaxTrackSize.x = 1024; 
+	//lpMMI->ptMaxTrackSize.y = 768;
+
+	CFrameWndEx::OnGetMinMaxInfo(lpMMI);
 }

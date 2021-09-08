@@ -161,11 +161,12 @@ public:
 
 	std::shared_ptr<Gdiplus::Bitmap> m_canvasAfterDrawing;
 	std::shared_ptr<Gdiplus::Bitmap> m_canvasDuringDraw;
-
+	CImage m_picture;
 	afx_msg void OnPaint();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	//afx_msg void OnFileOpen();
 	afx_msg void OnFileOpen();
+	virtual void OnInitialUpdate();
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전

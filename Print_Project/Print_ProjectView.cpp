@@ -31,7 +31,7 @@
 #include <vector>
 #include <memory>
 // CPrintProjectView
-
+#include <atlimage.h>
 IMPLEMENT_DYNCREATE(CPrintProjectView, CView)
 
 BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
@@ -1326,8 +1326,34 @@ void CPrintProjectView::OnFileOpen()
 	// [열기] 버튼을 눌렀을 때
 	if (iReturn == IDOK)
 	{
-
 		//OnOpenDocument(dlg.GetPathName());
+		CString strPathName = dlg.GetPathName();
+		CDC *pDc = GetWindowDC();
+		CDC memdc;
+		CImage m_bmpBitmap;
+		int width, height;
+		m_bmpBitmap.Destroy();
+		m_bmpBitmap.Load(strPathName);
+		width = m_bmpBitmap.GetWidth();
+		height = m_bmpBitmap.GetHeight();
 
+		memdc.CreateCompatibleDC(pDc);
+		m_bmpBitmap.Draw(/*memdc.*/pDc->m_hDC, 0, 0, width, height);
+
+		pDc->StretchBlt(0, 0, width, height, &memdc, 0, 0, width, height, SRCCOPY);
+
+		ReleaseDC(pDc);
+
+		pDc->DeleteDC();
+		pDc = NULL;
 	}
+
+}
+
+
+void CPrintProjectView::OnInitialUpdate()
+{
+	CView::OnInitialUpdate();
+
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 }
