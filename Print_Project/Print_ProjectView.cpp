@@ -30,7 +30,6 @@
 #include "LineControl.h"
 #include <vector>
 #include <memory>
-#include "Print_ProjectDoc.cpp"
 // CPrintProjectView
 
 IMPLEMENT_DYNCREATE(CPrintProjectView, CView)
@@ -1303,7 +1302,7 @@ void CPrintProjectView::OnFileSave()
 		//fwrite(&dib_define, 1, sizeof(BITMAPINFOHEADER), p_file);
 		//fwrite(p_image_data, 1, dib_define.bmiHeader.biSizeImage, p_file);
 		//fclose(p_file);
-		CPrintProjectView::OnFileSave();
+	//	CPrintProjectView::OnFileSave();
 	}
 	// 사용했던 비트맵과 DC 를 해제한다.
 	if (NULL != h_bitmap) DeleteObject(h_bitmap);
