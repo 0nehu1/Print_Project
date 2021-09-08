@@ -28,7 +28,7 @@ class CPrintProjectApp : public CWinAppEx
 {
 public:
 	CPrintProjectApp() noexcept;
-
+	ULONG_PTR m_gdiplusToken;
 
 // 재정의입니다.
 public:

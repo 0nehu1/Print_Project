@@ -87,6 +87,7 @@ public:
 	bool m_bContextMenu;
 	bool m_bHatch;
 	CPoint m_ptData[100];
+	
 	int m_nCount;
 	COLORREF m_PenColor;
 	COLORREF m_BrushColor;
@@ -162,6 +163,7 @@ public:
 
 	afx_msg void OnPaint();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	afx_msg void OnFileOpen();
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전
