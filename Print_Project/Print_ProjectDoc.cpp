@@ -33,6 +33,7 @@
 IMPLEMENT_DYNCREATE(CPrintProjectDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CPrintProjectDoc, CDocument)
+	
 END_MESSAGE_MAP()
 
 
@@ -41,6 +42,7 @@ END_MESSAGE_MAP()
 CPrintProjectDoc::CPrintProjectDoc() noexcept
 {
 	// TODO: 여기에 일회성 생성 코드를 추가합니다.
+	m_pImage = NULL;
 
 }
 
@@ -48,16 +50,6 @@ CPrintProjectDoc::~CPrintProjectDoc()
 {
 }
 
-BOOL CPrintProjectDoc::OnNewDocument()
-{
-	if (!CDocument::OnNewDocument())
-		return FALSE;
-
-	// TODO: 여기에 재초기화 코드를 추가합니다.
-	// SDI 문서는 이 문서를 다시 사용합니다.
-
-	return TRUE;
-}
 
 
 
@@ -146,3 +138,19 @@ void CPrintProjectDoc::Dump(CDumpContext& dc) const
 
 
 // CPrintProjectDoc 명령
+
+
+BOOL CPrintProjectDoc::OnOpenDocument(LPCTSTR lpszPathName)
+{
+	if (!CDocument::OnOpenDocument(lpszPathName))
+		return FALSE;
+
+	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
+
+	m_pImage = new CImage;
+	m_pImage->Load(lpszPathName);
+
+	return TRUE;
+}
+
+

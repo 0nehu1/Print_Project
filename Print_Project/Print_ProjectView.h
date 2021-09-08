@@ -11,6 +11,7 @@
 
 // Print_ProjectView.h: CPrintProjectView 클래스의 인터페이스
 //
+#include "Print_ProjectDoc.h"
 #include <vector>
 #include <memory>
 #pragma once
@@ -163,6 +164,7 @@ public:
 
 	afx_msg void OnPaint();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	//afx_msg void OnFileOpen();
 	afx_msg void OnFileOpen();
 };
 

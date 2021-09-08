@@ -22,7 +22,7 @@
 
 #include "Print_ProjectDoc.h"
 #include "Print_ProjectView.h"
-
+#include "targetver.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -30,6 +30,7 @@
 #include "LineControl.h"
 #include <vector>
 #include <memory>
+#include "Print_ProjectDoc.cpp"
 // CPrintProjectView
 
 IMPLEMENT_DYNCREATE(CPrintProjectView, CView)
@@ -115,6 +116,7 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_COMMAND(ID_FILE_SAVE, &CPrintProjectView::OnFileSave)
 	ON_WM_PAINT()
 	ON_WM_MOUSEWHEEL()
+	//ON_COMMAND(ID_FILE_OPEN, &CPrintProjectView::OnFileOpen)
 	ON_COMMAND(ID_FILE_OPEN, &CPrintProjectView::OnFileOpen)
 END_MESSAGE_MAP()
 
@@ -1098,7 +1100,7 @@ void CPrintProjectView::OnPaint()
 	dc.SetViewportExt(m_nZoomRate, m_nZoomRate);
 	//dc.SetViewportOrg(300, 300);
 
-
+	
 
 	CPrintProjectDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
@@ -1293,29 +1295,40 @@ void CPrintProjectView::OnFileSave()
 		fwrite(p_image_data, 1, dib_define.bmiHeader.biSizeImage, p_file);
 		fclose(p_file);
 	}
-
+	CString filter = _T("Bitmap(*.BMP)|*.BMP|JPEG(*.JPG)|*.JPG|PNG Files(*.png)|*.png||");
+	CFileDialog dlg(FALSE, _T(""), _T(""), OFN_HIDEREADONLY, filter);
+	if (dlg.DoModal() == IDOK)
+	{
+		//fwrite(&dib_format_layout, 1, sizeof(BITMAPFILEHEADER), p_file);
+		//fwrite(&dib_define, 1, sizeof(BITMAPINFOHEADER), p_file);
+		//fwrite(p_image_data, 1, dib_define.bmiHeader.biSizeImage, p_file);
+		//fclose(p_file);
+		CPrintProjectView::OnFileSave();
+	}
 	// 사용했던 비트맵과 DC 를 해제한다.
 	if (NULL != h_bitmap) DeleteObject(h_bitmap);
 	if (NULL != h_screen_dc) ::ReleaseDC(NULL, h_screen_dc);
 
-
+	
 }
+
+
+
 
 void CPrintProjectView::OnFileOpen()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	CString filter = _T("Bitmap(*.BMP)|*.BMP|JPEG(*.JPG)|*.JPG|All Files(*.*)|*.*||");
+	// FileDialog 클래스의 인스턴스 정의
 	CFileDialog dlg(TRUE, _T(""), _T(""), OFN_HIDEREADONLY, filter);
-	if (dlg.DoModal() == IDOK)
+
+	int iReturn = dlg.DoModal();
+
+	// [열기] 버튼을 눌렀을 때
+	if (iReturn == IDOK)
 	{
-		Image* img = Image::FromFile(dlg.GetPathName());
 
-		m_canvasAfterDrawing = std::make_shared<Bitmap>(img->GetWidth(), img->GetHeight());
-		m_canvasDuringDraw = std::make_shared<Bitmap>(img->GetWidth(), img->GetHeight());
+		//OnOpenDocument(dlg.GetPathName());
 
-		Graphics g(m_canvasAfterDrawing.get());
-		g.DrawImage(img, 0, 0, img->GetWidth(), img->GetHeight());
-
-		Invalidate(FALSE);
 	}
 }
