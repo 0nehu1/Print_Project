@@ -1227,88 +1227,39 @@ void CPrintProjectView::OnFileSave()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 
-	HDC h_screen_dc = ::GetDC(m_hWnd);
-	
-	// 현재 스크린의 해상도를 얻는다.
-	int width = ::GetDeviceCaps(h_screen_dc, HORZRES);
-	int height = ::GetDeviceCaps(h_screen_dc, VERTRES);
+	CDC* pDC = GetDC();
+	HDC hDC = pDC->m_hDC;
 
-	// DIB의 형식을 정의한다.
-	BITMAPINFO dib_define;
-	dib_define.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-	dib_define.bmiHeader.biWidth = width;
-	dib_define.bmiHeader.biHeight = height;
-	dib_define.bmiHeader.biPlanes = 1;
-	dib_define.bmiHeader.biBitCount = 24;
-	dib_define.bmiHeader.biCompression = BI_RGB;
-	dib_define.bmiHeader.biSizeImage = (((width * 24 + 31) & ~31) >> 3) * height;
-	dib_define.bmiHeader.biXPelsPerMeter = 0;
-	dib_define.bmiHeader.biYPelsPerMeter = 0;
-	dib_define.bmiHeader.biClrImportant = 0;
-	dib_define.bmiHeader.biClrUsed = 0;
+	// 크기
+	RECT rc;
+	GetClientRect(&rc);
 
-	// DIB의 내부 이미지 비트 패턴을 참조할 포인터 변수
-	BYTE* p_image_data = NULL;
+	//비트맵 생성
+	HDC hMemDC = CreateCompatibleDC(hDC);
+	HBITMAP hBitmap = CreateCompatibleBitmap(hDC, rc.right, rc.bottom);
+	HBITMAP hBmpOld = (HBITMAP)SelectObject(hMemDC, hBitmap);
+	BitBlt(hMemDC, 0, 0, rc.right, rc.bottom, hDC, 0, 0, SRCCOPY);
+	SelectObject(hMemDC, hBmpOld);
+	DeleteDC(hMemDC);
 
-	// dib_define에 정의된 내용으로 DIB를 생성한다.
-	HBITMAP h_bitmap = ::CreateDIBSection(h_screen_dc, &dib_define, DIB_RGB_COLORS, (void**)&p_image_data, 0, 0);
+	//비트맵 사양설정
+	BITMAPINFOHEADER bmih;
+	ZeroMemory(&bmih, sizeof(BITMAPINFOHEADER));
+	bmih.biSize = sizeof(BITMAPINFOHEADER);
+	bmih.biWidth = rc.right;
+	bmih.biHeight = rc.bottom;
+	bmih.biPlanes = 1;
+	bmih.biBitCount = 24;
+	bmih.biCompression = BI_RGB;
 
-	// 이미지를 추출하기 위해서 가상 DC를 생성한다. 메인 DC에서는 직접적으로 비트맵에 접근하여
-	// 이미지 패턴을 얻을 수 없기 때문이다.
-	HDC h_memory_dc = ::CreateCompatibleDC(h_screen_dc);
+	//비트맵(DIB)데이터 추출
+	GetDIBits(hDC, hBitmap, 0, rc.bottom,  NULL, (LPBITMAPINFO)&bmih, DIB_RGB_COLORS);
+	LPBYTE lpBits = new BYTE[bmih.biSizeImage];
+	GetDIBits(hDC, hBitmap, 0, rc.bottom, lpBits, (LPBITMAPINFO)&bmih, DIB_RGB_COLORS);
+	ReleaseDC(pDC);
+	DeleteObject(hBitmap);
 
-	// 가상 DC에 이미지를 추출할 비트맵을 연결한다.
-	HBITMAP h_old_bitmap = (HBITMAP)::SelectObject(h_memory_dc, h_bitmap);
-
-	// 현재 스크린 화면을 캡쳐한다.
-	::BitBlt(h_memory_dc, 0, 0, width, height, h_screen_dc, 0, 0, SRCCOPY);
-
-	// 본래의 비트맵으로 복구한다.
-	::SelectObject(h_memory_dc, h_old_bitmap);
-
-	// 가상 DC를 제거한다.
-	DeleteDC(h_memory_dc);
-
-	// DIB 파일의 헤더 내용을 구성한다.
-	BITMAPFILEHEADER dib_format_layout;
-	ZeroMemory(&dib_format_layout, sizeof(BITMAPFILEHEADER));
-	dib_format_layout.bfType = *(WORD*)"BM";
-	dib_format_layout.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + dib_define.bmiHeader.biSizeImage;
-	dib_format_layout.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-
-	//현재 디렉토리에서 한 순위를 내려간후 [data]\\save\\ 폴더에 저장
-	CString directory;
-	char* savePath;
-
-	
-	USES_CONVERSION;
-	savePath = W2A(directory.GetString());
-
-
-	// DIB 파일을 생성한다.
-	FILE* p_file = NULL;
-	fopen_s(&p_file, "image.bmp", "wb");
-	if (p_file != NULL) {
-		fwrite(&dib_format_layout, 1, sizeof(BITMAPFILEHEADER), p_file);
-		fwrite(&dib_define, 1, sizeof(BITMAPINFOHEADER), p_file);
-		fwrite(p_image_data, 1, dib_define.bmiHeader.biSizeImage, p_file);
-		fclose(p_file);
-	}
-	CString filter = _T("Bitmap(*.BMP)|*.BMP|JPEG(*.JPG)|*.JPG|PNG Files(*.png)|*.png||");
-	CFileDialog dlg(FALSE, _T(""), _T(""), OFN_HIDEREADONLY, filter);
-	if (dlg.DoModal() == IDOK)
-	{
-		//fwrite(&dib_format_layout, 1, sizeof(BITMAPFILEHEADER), p_file);
-		//fwrite(&dib_define, 1, sizeof(BITMAPINFOHEADER), p_file);
-		//fwrite(p_image_data, 1, dib_define.bmiHeader.biSizeImage, p_file);
-		//fclose(p_file);
-	//	CPrintProjectView::OnFileSave();
-	}
-	// 사용했던 비트맵과 DC 를 해제한다.
-	if (NULL != h_bitmap) DeleteObject(h_bitmap);
-	if (NULL != h_screen_dc) ::ReleaseDC(NULL, h_screen_dc);
-
-	
+	// 비트맵 파일 헤더 설정
 }
 
 
