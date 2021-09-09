@@ -1226,23 +1226,19 @@ BOOL CPrintProjectView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 void CPrintProjectView::OnFileSave()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-
 	CDC* pDC = GetDC();
 	HDC hDC = pDC->m_hDC;
-
-	// 크기
+	//picture control 크기	
 	RECT rc;
 	GetClientRect(&rc);
-
-	//비트맵 생성
+	//비트맵생성	
 	HDC hMemDC = CreateCompatibleDC(hDC);
 	HBITMAP hBitmap = CreateCompatibleBitmap(hDC, rc.right, rc.bottom);
 	HBITMAP hBmpOld = (HBITMAP)SelectObject(hMemDC, hBitmap);
 	BitBlt(hMemDC, 0, 0, rc.right, rc.bottom, hDC, 0, 0, SRCCOPY);
 	SelectObject(hMemDC, hBmpOld);
 	DeleteDC(hMemDC);
-
-	//비트맵 사양설정
+	//비트맵사양설정	
 	BITMAPINFOHEADER bmih;
 	ZeroMemory(&bmih, sizeof(BITMAPINFOHEADER));
 	bmih.biSize = sizeof(BITMAPINFOHEADER);
@@ -1251,15 +1247,39 @@ void CPrintProjectView::OnFileSave()
 	bmih.biPlanes = 1;
 	bmih.biBitCount = 24;
 	bmih.biCompression = BI_RGB;
-
-	//비트맵(DIB)데이터 추출
-	GetDIBits(hDC, hBitmap, 0, rc.bottom,  NULL, (LPBITMAPINFO)&bmih, DIB_RGB_COLORS);
+	// 비트맵(DIB) 데이터 추출	
+	GetDIBits(hDC, hBitmap, 0, rc.bottom, NULL, (LPBITMAPINFO)&bmih, DIB_RGB_COLORS);
 	LPBYTE lpBits = new BYTE[bmih.biSizeImage];
 	GetDIBits(hDC, hBitmap, 0, rc.bottom, lpBits, (LPBITMAPINFO)&bmih, DIB_RGB_COLORS);
 	ReleaseDC(pDC);
 	DeleteObject(hBitmap);
+	// 비트맵 파일 헤더 설정	
+	BITMAPFILEHEADER bmfh;
+	bmfh.bfType = 'MB';
+	bmfh.bfSize = sizeof(BITMAPFILEHEADER)
+		+ sizeof(BITMAPINFOHEADER) + bmih.biSizeImage;
+	bmfh.bfReserved1 = 0;
+	bmfh.bfReserved2 = 0;
+	bmfh.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+	// 파일명설정	
+	SYSTEMTIME time;
+	GetLocalTime(&time);
+	CString Name;
+	Name.Format(_T("C:\\capture\\CAM1_%4d%2d%2d_%2d%2d%2d.bmp"),
+		time.wYear, time.wMonth, time.wDay,
+		time.wHour, time.wMinute, time.wSecond);
+	_bstr_t gg(Name);
+	BSTR lpszFileName = gg.copy();
+	// 비트맵 파일 생성 및 데이터 저장	
+	DWORD dwWritten;
+	HANDLE hFile = CreateFile(lpszFileName, GENERIC_WRITE, 0, NULL,
+		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	WriteFile(hFile, &bmfh, sizeof(BITMAPFILEHEADER), &dwWritten, NULL);
+	WriteFile(hFile, &bmih, sizeof(BITMAPINFOHEADER), &dwWritten, NULL);
+	WriteFile(hFile, lpBits, bmih.biSizeImage, &dwWritten, NULL);
+	CloseHandle(hFile);
+	delete[] lpBits;
 
-	// 비트맵 파일 헤더 설정
 }
 
 
@@ -1290,7 +1310,7 @@ void CPrintProjectView::OnFileOpen()
 
 		memdc.CreateCompatibleDC(pDc);
 		m_bmpBitmap.Draw(/*memdc.*/pDc->m_hDC, 0, 0, width, height);
-
+		
 		pDc->StretchBlt(0, 0, width, height, &memdc, 0, 0, width, height, SRCCOPY);
 
 		ReleaseDC(pDc);
