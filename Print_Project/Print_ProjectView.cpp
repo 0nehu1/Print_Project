@@ -716,16 +716,16 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 		if (m_bLButtonDown)
 		{
 			POINT arPt1[9] = {
-				{m_ptStart.x,(m_ptStart.y+m_ptPrev.y)/3},{m_ptStart.x,(m_ptStart.y+m_ptPrev.y) / 3 *2},
-				{(m_ptStart.x+m_ptPrev.x)/3,m_ptPrev.y},{(m_ptStart.x + m_ptPrev.x) / 3 *2 ,m_ptPrev.y},
-				{m_ptPrev.x,(m_ptStart.y+m_ptPrev.y) / 3 * 2},{m_ptPrev.x,(m_ptStart.y+m_ptPrev.y) / 3},
-				{(m_ptStart.x + m_ptPrev.x) / 3 * 2 ,m_ptStart.y},{(m_ptStart.x + m_ptPrev.x) / 3,m_ptStart.y}
+				{m_ptStart.x,(m_ptStart.y+m_ptPrev.y)/3},{m_ptStart.x,((m_ptStart.y+m_ptPrev.y) / 3) *2},
+				{(m_ptStart.x+m_ptPrev.x)/3,m_ptPrev.y},{((m_ptStart.x + m_ptPrev.x) / 3) *2 ,m_ptPrev.y},
+				{m_ptPrev.x,((m_ptStart.y+m_ptPrev.y) / 3) * 2},{m_ptPrev.x,(m_ptStart.y+m_ptPrev.y) / 3},
+				{((m_ptStart.x + m_ptPrev.x) / 3) * 2 ,m_ptStart.y},{(m_ptStart.x + m_ptPrev.x) / 3,m_ptStart.y}
 			};
 			POINT arPt2[9] = {
-				{m_ptStart.x,(m_ptStart.y+point.y) / 3},{m_ptStart.x,(m_ptStart.y+point.y) / 3 * 2},
-				{(m_ptStart.x + point.x) / 3,point.y},{(m_ptStart.x + point.x) / 3 * 2 ,point.y},
-				{point.x,(m_ptStart.y+point.y) / 3 * 2},{point.x,(m_ptStart.y+point.y) / 3},
-				{(m_ptStart.x + point.x) / 3 * 2 ,m_ptStart.y},{(m_ptStart.x + point.x) / 3,m_ptStart.y}
+				{m_ptStart.x,(m_ptStart.y+point.y) / 3},{m_ptStart.x,((m_ptStart.y+point.y) / 3) * 2},
+				{(m_ptStart.x + point.x) / 3,point.y},{((m_ptStart.x + point.x) / 3) * 2 ,point.y},
+				{point.x,((m_ptStart.y+point.y) / 3) * 2},{point.x,(m_ptStart.y+point.y) / 3},
+				{((m_ptStart.x + point.x) / 3) * 2 ,m_ptStart.y},{(m_ptStart.x + point.x) / 3,m_ptStart.y}
 			};
 
 			dc.Polygon(arPt1, 8);
@@ -1320,10 +1320,10 @@ void CPrintProjectView::OnPaint()
 	{
 	case OCTAGON_MODE:
 		POINT arPt1[9] = {
-				{m_ptStart.x,(m_ptStart.y+m_ptPrev.y) / 3},{m_ptStart.x,(m_ptStart.y+m_ptPrev.y) / 3 * 2},
-				{(m_ptStart.x + m_ptPrev.x) / 3,m_ptPrev.y},{(m_ptStart.x + m_ptPrev.x) / 3 * 2 ,m_ptPrev.y},
-				{m_ptPrev.x,(m_ptStart.y+m_ptPrev.y) / 3 * 2},{m_ptPrev.x,(m_ptStart.y+m_ptPrev.y) / 3},
-				{(m_ptStart.x + m_ptPrev.x) / 3 * 2 ,m_ptStart.y},{(m_ptStart.x + m_ptPrev.x) / 3,m_ptStart.y}
+				{m_ptStart.x,(m_ptStart.y+m_ptPrev.y) / 3},{m_ptStart.x,((m_ptStart.y+m_ptPrev.y) / 3 )* 2},
+				{(m_ptStart.x + m_ptPrev.x) / 3,m_ptPrev.y},{((m_ptStart.x + m_ptPrev.x) / 3 )* 2 ,m_ptPrev.y},
+				{m_ptPrev.x,((m_ptStart.y+m_ptPrev.y) / 3 )* 2},{m_ptPrev.x,(m_ptStart.y+m_ptPrev.y) / 3},
+				{((m_ptStart.x + m_ptPrev.x) / 3 )* 2 ,m_ptStart.y},{(m_ptStart.x + m_ptPrev.x) / 3,m_ptStart.y}
 		};
 		dc.Polygon(arPt1, 8);
 		break;
