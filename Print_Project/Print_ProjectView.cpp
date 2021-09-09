@@ -118,6 +118,7 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	//ON_COMMAND(ID_FILE_OPEN, &CPrintProjectView::OnFileOpen)
 	ON_COMMAND(ID_FILE_OPEN, &CPrintProjectView::OnFileOpen)
 	ON_COMMAND(ID_BUTTON_PENTAGON, &CPrintProjectView::OnButtonPentagon)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_PENTAGON, &CPrintProjectView::OnUpdateButtonPentagon)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -956,6 +957,12 @@ void CPrintProjectView::OnUpdateButtonFigure(CCmdUI* pCmdUI)
 
 }
 
+void CPrintProjectView::OnUpdateButtonPentagon(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode != PENTAGON_MODE ? 1 : 0);
+}
+
 
 void CPrintProjectView::OnUpdateButtonLinecontrol(CCmdUI* pCmdUI)
 {
@@ -1356,6 +1363,8 @@ void CPrintProjectView::OnInitialUpdate()
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 }
+
+
 
 
 

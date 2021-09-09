@@ -168,6 +168,7 @@ public:
 	afx_msg void OnFileOpen();
 	virtual void OnInitialUpdate();
 	afx_msg void OnButtonPentagon();
+	afx_msg void OnUpdateButtonPentagon(CCmdUI* pCmdUI);
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전
