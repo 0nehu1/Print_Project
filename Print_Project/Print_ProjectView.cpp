@@ -117,6 +117,7 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_WM_MOUSEWHEEL()
 	//ON_COMMAND(ID_FILE_OPEN, &CPrintProjectView::OnFileOpen)
 	ON_COMMAND(ID_FILE_OPEN, &CPrintProjectView::OnFileOpen)
+	ON_COMMAND(ID_BUTTON_PENTAGON, &CPrintProjectView::OnButtonPentagon)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -391,7 +392,11 @@ void CPrintProjectView::OnButtonRoundrect()
 	pFrame->m_wndStatusBar.SetWindowText(_T("둥근사각형 그리기"));
 }
 
-
+void CPrintProjectView::OnButtonPentagon()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nDrawMode = 12;
+}
 void CPrintProjectView::OnButtonEraser()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
@@ -652,7 +657,21 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 			m_ptPrev = point;
 		}
 		break;
+	case PENTAGON_MODE:
+		if (m_bLButtonDown)
+		{
+			POINT arPt1[6] = {
+		 {m_ptStart.x,m_ptStart.y}, {m_ptStart.x, m_ptPrev.y}, { (m_ptPrev.x + m_ptStart.x) / 2, m_ptPrev.y + (m_ptPrev.y - m_ptStart.y) / 2 },
+				{ m_ptPrev.x, m_ptPrev.y },{m_ptPrev.x,m_ptStart.y} };
+			POINT arPt2[6] = {
+			{m_ptStart.x,m_ptStart.y}, {m_ptStart.x, point.y}, { (point.x + m_ptStart.x) / 2, point.y + (point.y - m_ptStart.y) / 2 },
+				{ point.x, point.y },{point.x,m_ptStart.y} };
+		
+			dc.Polygon(arPt1, 5);
+			dc.Polygon(arPt2, 5);
 
+			m_ptPrev = point;
+		}
 	}
 
 	pen.DeleteObject();					//pen 객체 삭제
@@ -683,6 +702,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 	case RECTANGLE_MODE:
 	case TRIANGLE_MODE:
 	case RIGHTTRIANGLE_MODE:
+	case PENTAGON_MODE:
 	case ROUNDRECT_MODE:
 	case PIERECT_MODE:
 	case HALFCIRCLE_HORIZONTAL_MODE:
@@ -717,7 +737,7 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 		if (m_nDrawMode == PENCIL_MODE || m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE
 			|| m_nDrawMode == TRIANGLE_MODE || m_nDrawMode == RIGHTTRIANGLE_MODE || m_nDrawMode == ROUNDRECT_MODE
 			|| m_nDrawMode == PIERECT_MODE || m_nDrawMode == HALFCIRCLE_HORIZONTAL_MODE || m_nDrawMode == HALFCIRCLE_VERTICAL_MODE
-			|| m_nDrawMode == PIERECT270_MODE || m_nDrawMode == ERASER_MODE)
+			|| m_nDrawMode == PIERECT270_MODE || m_nDrawMode == ERASER_MODE ||m_nDrawMode ==PENTAGON_MODE)
 		{
 			m_bLButtonDown = false;
 			m_bFirst = true;
@@ -1192,8 +1212,16 @@ void CPrintProjectView::OnPaint()
 		dc.Polygon(arPt2, 3);
 		break;
 	}
+	switch (m_nDrawMode)
+	{
+	case PENTAGON_MODE:
+		POINT arPt1[6] = { 
+		{m_ptStart.x,m_ptStart.y}, {m_ptStart.x, m_ptPrev.y}, { (m_ptPrev.x + m_ptStart.x )/2, m_ptPrev.y+ (m_ptPrev.y-m_ptStart.y)/2 }, { m_ptPrev.x, m_ptPrev.y },{m_ptPrev.x,m_ptStart.y} };
+		dc.Polygon(arPt1, 5);
+		break;
+	}
 	dc.SelectObject(oldpen);		//이전 pen으로 설정
-	dc.SelectObject(oldbrush);	//이전 brush로 설정
+	dc.SelectObject(oldbrush);		//이전 brush로 설정
 	pen.DeleteObject();				//pen 객체 삭제
 	brush.DeleteObject();			//brush 객체 삭제
 	//Invalidate(false);
@@ -1328,3 +1356,6 @@ void CPrintProjectView::OnInitialUpdate()
 
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 }
+
+
+
