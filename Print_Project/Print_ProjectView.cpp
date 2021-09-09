@@ -692,7 +692,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 		m_nCount = 0;
 		for (int i = 0; i < 100; i++)
 			m_ptData[i] = 0;
-		//Invalidate(false);		//화면갱신
+		Invalidate(false);		//화면갱신
 	}
 
 	switch (m_nDrawMode)
@@ -960,7 +960,7 @@ void CPrintProjectView::OnUpdateButtonFigure(CCmdUI* pCmdUI)
 void CPrintProjectView::OnUpdateButtonPentagon(CCmdUI* pCmdUI)
 {
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
-	pCmdUI->SetCheck(m_nDrawMode != PENTAGON_MODE ? 1 : 0);
+	pCmdUI->SetCheck(m_nDrawMode == PENTAGON_MODE ? 1 : 0);
 }
 
 
