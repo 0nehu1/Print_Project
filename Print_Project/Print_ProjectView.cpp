@@ -121,6 +121,8 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_PENTAGON, &CPrintProjectView::OnUpdateButtonPentagon)
 	ON_COMMAND(ID_BUTTON_HEXAGON, &CPrintProjectView::OnButtonHexagon)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_HEXAGON, &CPrintProjectView::OnUpdateButtonHexagon)
+	ON_COMMAND(ID_BUTTON_OCTAGON, &CPrintProjectView::OnButtonOctagon)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_OCTAGON, &CPrintProjectView::OnUpdateButtonOctagon)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -406,6 +408,13 @@ void CPrintProjectView::OnButtonHexagon()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	m_nDrawMode = 13;
 }
+
+void CPrintProjectView::OnButtonOctagon()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nDrawMode = 14;
+}
+
 
 void CPrintProjectView::OnButtonEraser()
 {
@@ -702,6 +711,29 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 			m_ptPrev = point;
 		}
 		break;
+
+	case OCTAGON_MODE:
+		if (m_bLButtonDown)
+		{
+			POINT arPt1[9] = {
+				{m_ptStart.x,(m_ptStart.y+m_ptPrev.y)/3},{m_ptStart.x,(m_ptStart.y+m_ptPrev.y) / 3 *2},
+				{(m_ptStart.x+m_ptPrev.x)/3,m_ptPrev.y},{(m_ptStart.x + m_ptPrev.x) / 3 *2 ,m_ptPrev.y},
+				{m_ptPrev.x,(m_ptStart.y+m_ptPrev.y) / 3 * 2},{m_ptPrev.x,(m_ptStart.y+m_ptPrev.y) / 3},
+				{(m_ptStart.x + m_ptPrev.x) / 3 * 2 ,m_ptStart.y},{(m_ptStart.x + m_ptPrev.x) / 3,m_ptStart.y}
+			};
+			POINT arPt2[9] = {
+				{m_ptStart.x,(m_ptStart.y+point.y) / 3},{m_ptStart.x,(m_ptStart.y+point.y) / 3 * 2},
+				{(m_ptStart.x + point.x) / 3,point.y},{(m_ptStart.x + point.x) / 3 * 2 ,point.y},
+				{point.x,(m_ptStart.y+point.y) / 3 * 2},{point.x,(m_ptStart.y+point.y) / 3},
+				{(m_ptStart.x + point.x) / 3 * 2 ,m_ptStart.y},{(m_ptStart.x + point.x) / 3,m_ptStart.y}
+			};
+
+			dc.Polygon(arPt1, 8);
+			dc.Polygon(arPt2, 8);
+
+			m_ptPrev = point;
+		}
+		break;
 	}
 
 	pen.DeleteObject();					//pen 객체 삭제
@@ -734,6 +766,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 	case RIGHTTRIANGLE_MODE:
 	case PENTAGON_MODE:
 	case HEXAGON_MODE:
+	case OCTAGON_MODE:
 	case ROUNDRECT_MODE:
 	case PIERECT_MODE:
 	case HALFCIRCLE_HORIZONTAL_MODE:
@@ -768,7 +801,8 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 		if (m_nDrawMode == PENCIL_MODE || m_nDrawMode == LINE_MODE || m_nDrawMode == ELLIPSE_MODE || m_nDrawMode == RECTANGLE_MODE
 			|| m_nDrawMode == TRIANGLE_MODE || m_nDrawMode == RIGHTTRIANGLE_MODE || m_nDrawMode == ROUNDRECT_MODE
 			|| m_nDrawMode == PIERECT_MODE || m_nDrawMode == HALFCIRCLE_HORIZONTAL_MODE || m_nDrawMode == HALFCIRCLE_VERTICAL_MODE
-			|| m_nDrawMode == PIERECT270_MODE || m_nDrawMode == ERASER_MODE ||m_nDrawMode ==PENTAGON_MODE || m_nDrawMode == HEXAGON_MODE)
+			|| m_nDrawMode == PIERECT270_MODE || m_nDrawMode == ERASER_MODE ||m_nDrawMode ==PENTAGON_MODE || m_nDrawMode == HEXAGON_MODE
+			|| m_nDrawMode == OCTAGON_MODE)
 		{
 			m_bLButtonDown = false;
 			m_bFirst = true;
@@ -813,6 +847,20 @@ void CPrintProjectView::OnUpdateRectangle(CCmdUI* pCmdUI)
 }
 
 
+void CPrintProjectView::OnUpdateButtonHexagon(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == HEXAGON_MODE ? TRUE : FALSE);
+}
+
+
+
+
+void CPrintProjectView::OnUpdateButtonOctagon(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == OCTAGON_MODE ? TRUE : FALSE);
+}
 
 
 
@@ -1267,6 +1315,19 @@ void CPrintProjectView::OnPaint()
 		dc.Polygon(arPt1, 6);
 		break;
 	}
+
+	switch (m_nDrawMode)
+	{
+	case OCTAGON_MODE:
+		POINT arPt1[9] = {
+				{m_ptStart.x,(m_ptStart.y+m_ptPrev.y) / 3},{m_ptStart.x,(m_ptStart.y+m_ptPrev.y) / 3 * 2},
+				{(m_ptStart.x + m_ptPrev.x) / 3,m_ptPrev.y},{(m_ptStart.x + m_ptPrev.x) / 3 * 2 ,m_ptPrev.y},
+				{m_ptPrev.x,(m_ptStart.y+m_ptPrev.y) / 3 * 2},{m_ptPrev.x,(m_ptStart.y+m_ptPrev.y) / 3},
+				{(m_ptStart.x + m_ptPrev.x) / 3 * 2 ,m_ptStart.y},{(m_ptStart.x + m_ptPrev.x) / 3,m_ptStart.y}
+		};
+		dc.Polygon(arPt1, 8);
+		break;
+	}
 	
 
 	dc.SelectObject(oldpen);		//이전 pen으로 설정
@@ -1414,7 +1475,3 @@ void CPrintProjectView::OnInitialUpdate()
 
 
 
-void CPrintProjectView::OnUpdateButtonHexagon(CCmdUI* pCmdUI)
-{
-	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
-}
