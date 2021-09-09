@@ -17,7 +17,7 @@
 #pragma once
 enum DRAW_MODE { PENCIL_MODE,LINE_MODE, ELLIPSE_MODE, RECTANGLE_MODE , ERASER_MODE
 	, TRIANGLE_MODE, RIGHTTRIANGLE_MODE, ROUNDRECT_MODE,PIERECT_MODE,HALFCIRCLE_HORIZONTAL_MODE, HALFCIRCLE_VERTICAL_MODE
-	, PIERECT270_MODE, PENTAGON_MODE};
+	, PIERECT270_MODE, PENTAGON_MODE,HEXAGON_MODE};
 enum PEN_MODE { SOLID_MODE, DASH_MODE, DOT_MODE, DASHDOT_MODE, DASHDOTDOT_MODE };
 
 class CPrintProjectView : public CView
@@ -169,6 +169,8 @@ public:
 	virtual void OnInitialUpdate();
 	afx_msg void OnButtonPentagon();
 	afx_msg void OnUpdateButtonPentagon(CCmdUI* pCmdUI);
+	afx_msg void OnButtonHexagon();
+	afx_msg void OnUpdateButtonHexagon(CCmdUI* pCmdUI);
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전
