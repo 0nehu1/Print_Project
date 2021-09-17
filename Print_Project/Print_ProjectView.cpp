@@ -123,6 +123,8 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_HEXAGON, &CPrintProjectView::OnUpdateButtonHexagon)
 	ON_COMMAND(ID_BUTTON_OCTAGON, &CPrintProjectView::OnButtonOctagon)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_OCTAGON, &CPrintProjectView::OnUpdateButtonOctagon)
+	ON_COMMAND(ID_BUTTON_TRAPEZOID, &CPrintProjectView::OnButtonTrapezoid)
+	ON_UPDATE_COMMAND_UI(ID_BUTTON_TRAPEZOID, &CPrintProjectView::OnUpdateButtonTrapezoid)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
@@ -397,6 +399,14 @@ void CPrintProjectView::OnButtonRoundrect()
 	pFrame->m_wndStatusBar.SetWindowText(_T("둥근사각형 그리기"));
 }
 
+
+void CPrintProjectView::OnButtonTrapezoid()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_nDrawMode = 15;
+}
+
+
 void CPrintProjectView::OnButtonPentagon()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
@@ -599,6 +609,22 @@ void CPrintProjectView::OnMouseMove(UINT nFlags, CPoint point)
 			m_ptPrev = point;
 		}
 		break;
+	case TRAPEZOID_MODE:
+		if (m_bLButtonDown)
+		{
+			dc.SetROP2(R2_NOTXORPEN);
+	
+			POINT arPt1[5] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x, m_ptPrev.y},{ m_ptPrev.x, m_ptPrev.y},{(m_ptStart.x+m_ptPrev.x)/2,m_ptStart.y} };
+			POINT arPt2[5] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x, point.y},{point.x, point.y},{(m_ptStart.x + point.x) / 2,m_ptStart.y} };
+
+			dc.Polygon(arPt1, 4);
+			dc.Polygon(arPt2, 4);
+			m_ptPrev = point;
+
+		}
+
+
+
 	case PIERECT_MODE:
 	if (m_bLButtonDown)
 	{
@@ -773,6 +799,7 @@ void CPrintProjectView::OnLButtonDown(UINT nFlags, CPoint point)
 	case HALFCIRCLE_VERTICAL_MODE:
 	case PIERECT270_MODE:
 	case ERASER_MODE:
+	case TRAPEZOID_MODE:
 		m_bLButtonDown = true;			//왼쪽 버튼 눌림
 		m_ptStart = m_ptPrev = point;	//시작 점과 이전 점에 현재 점을 저장
 		m_bFirst = false;				//처음 그리는 것 -> false
@@ -802,7 +829,7 @@ void CPrintProjectView::OnLButtonUp(UINT nFlags, CPoint point)
 			|| m_nDrawMode == TRIANGLE_MODE || m_nDrawMode == RIGHTTRIANGLE_MODE || m_nDrawMode == ROUNDRECT_MODE
 			|| m_nDrawMode == PIERECT_MODE || m_nDrawMode == HALFCIRCLE_HORIZONTAL_MODE || m_nDrawMode == HALFCIRCLE_VERTICAL_MODE
 			|| m_nDrawMode == PIERECT270_MODE || m_nDrawMode == ERASER_MODE ||m_nDrawMode ==PENTAGON_MODE || m_nDrawMode == HEXAGON_MODE
-			|| m_nDrawMode == OCTAGON_MODE)
+			|| m_nDrawMode == OCTAGON_MODE || m_nDrawMode == TRAPEZOID_MODE)
 		{
 			m_bLButtonDown = false;
 			m_bFirst = true;
@@ -1330,6 +1357,17 @@ void CPrintProjectView::OnPaint()
 	}
 	
 
+	switch (m_nDrawMode)
+	{
+	case TRAPEZOID_MODE:
+		POINT arPt1[5] = { {m_ptStart.x,m_ptStart.y},{m_ptStart.x, m_ptPrev.y},
+			{ m_ptPrev.x, m_ptPrev.y},{(m_ptStart.x + m_ptPrev.x) / 2,m_ptStart.y} };
+		
+		dc.Polygon(arPt1, 4);
+	
+		break;
+	}
+
 	dc.SelectObject(oldpen);		//이전 pen으로 설정
 	dc.SelectObject(oldbrush);		//이전 brush로 설정
 	pen.DeleteObject();				//pen 객체 삭제
@@ -1475,3 +1513,10 @@ void CPrintProjectView::OnInitialUpdate()
 
 
 
+
+
+
+void CPrintProjectView::OnUpdateButtonTrapezoid(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+}
