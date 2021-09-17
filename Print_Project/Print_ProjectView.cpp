@@ -1053,6 +1053,12 @@ void CPrintProjectView::OnUpdateButtonCircle(CCmdUI* pCmdUI)
 	pCmdUI->SetCheck(m_nDrawMode == ELLIPSE_MODE ? 1 : 0);
 }
 
+void CPrintProjectView::OnUpdateButtonTrapezoid(CCmdUI* pCmdUI)
+{
+	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
+	pCmdUI->SetCheck(m_nDrawMode == TRAPEZOID_MODE ? 1 : 0);
+}
+
 
 
 void CPrintProjectView::OnUpdateButtonFigure(CCmdUI* pCmdUI)
@@ -1210,7 +1216,6 @@ void CPrintProjectView::OnUpdateButtonDefault(CCmdUI* pCmdUI)
 	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
 	pCmdUI->SetCheck(m_bHatch == false ? 1 : 0);
 }
-
 
 
 
@@ -1516,7 +1521,3 @@ void CPrintProjectView::OnInitialUpdate()
 
 
 
-void CPrintProjectView::OnUpdateButtonTrapezoid(CCmdUI* pCmdUI)
-{
-	// TODO: 여기에 명령 업데이트 UI 처리기 코드를 추가합니다.
-}
