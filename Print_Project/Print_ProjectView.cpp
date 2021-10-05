@@ -1511,7 +1511,7 @@ void CPrintProjectView::OnFileOpen()
 		memdc.CreateCompatibleDC(pDc);
 		m_bmpBitmap.Draw(/*memdc.*/pDc->m_hDC, 0, 0, width, height);
 		m_image = m_bmpBitmap;
-		invert_image.Create(m_image.GetWidth(), m_image.GetHeight(), m_image.GetBPP(), 0);
+	
 
 		pDc->StretchBlt(0, 0, width, height, &memdc, 0, 0, width, height, SRCCOPY);
 
@@ -1526,9 +1526,12 @@ void CPrintProjectView::OnFileOpen()
 
 void CPrintProjectView::OnButtonInverse()
 {
-	CClientDC dc(this);
 
+	//CClientDC dc(this);
+	CDC* pDc = GetWindowDC();
+	CDC memdc;
 	COLORREF temp_color;
+	invert_image.Create(m_image.GetWidth(), m_image.GetHeight(), m_image.GetBPP(), 0);
 
 	for (int y = 0; y < m_image.GetHeight(); y++) { // 이미지의 세로 픽셀값 만큼
 		for (int x = 0; x < m_image.GetWidth(); x++) { // 이미지의 가로 픽셀값 만큼
@@ -1546,5 +1549,8 @@ void CPrintProjectView::OnButtonInverse()
 			// 반전된 RGB 값으로 새로운 이미지에 SetPixel 해줌
 		}
 	}
-	invert_image.Draw(dc, m_image.GetWidth(), 0); // 좌표(500,10)을 기준으로 이미지 출력
+	invert_image.Draw(pDc->m_hDC, 0, 0); // 좌표(500,10)을 기준으로 이미지 출력
+	
+		invert_image.ReleaseGDIPlus;
+		invert_image.Destroy();
 }

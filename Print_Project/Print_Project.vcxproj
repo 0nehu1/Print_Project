@@ -183,7 +183,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Enhance.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="IppImage\IppColor.h" />
     <ClInclude Include="IppImage\IppConvert.h" />
@@ -206,7 +205,6 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Enhance.cpp" />
     <ClCompile Include="IppImage\IppColor.cpp" />
     <ClCompile Include="IppImage\IppConvert.cpp" />
     <ClCompile Include="IppImage\IppDib.cpp" />
