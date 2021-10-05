@@ -14,6 +14,7 @@
 
 
 #pragma once
+#include "IppImage\IppDib.h"
 
 
 class CPrintProjectDoc : public CDocument
@@ -59,4 +60,7 @@ public:
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	CImage* m_pImage;
 
+	// 비트맵 객체
+	IppDib m_Dib;
+	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
 };

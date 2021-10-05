@@ -12,6 +12,7 @@
 // MainFrm.cpp: CMainFrame 클래스의 구현
 //
 
+#include "IppImage\stdafx.h"
 #include "pch.h"
 #include "framework.h"
 #include "Print_Project.h"

@@ -11,7 +11,6 @@
 
 // Print_ProjectDoc.cpp: CPrintProjectDoc 클래스의 구현
 //
-
 #include "pch.h"
 #include "framework.h"
 // SHARED_HANDLERS는 미리 보기, 축소판 그림 및 검색 필터 처리기를 구현하는 ATL 프로젝트에서 정의할 수 있으며
@@ -142,15 +141,29 @@ void CPrintProjectDoc::Dump(CDumpContext& dc) const
 
 BOOL CPrintProjectDoc::OnOpenDocument(LPCTSTR lpszPathName)
 {
+	//if (!CDocument::OnOpenDocument(lpszPathName))
+	//	return FALSE;
+
+	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
+//	return m_Dib.Load(CT2A(lpszPathName));
+	
 	if (!CDocument::OnOpenDocument(lpszPathName))
 		return FALSE;
 
-	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
 
 	m_pImage = new CImage;
 	m_pImage->Load(lpszPathName);
 
 	return TRUE;
+
 }
 
 
+
+
+BOOL CPrintProjectDoc::OnSaveDocument(LPCTSTR lpszPathName)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+
+	return m_Dib.Save(CT2A(lpszPathName));
+}

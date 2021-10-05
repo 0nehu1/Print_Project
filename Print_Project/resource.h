@@ -79,6 +79,7 @@
 #define ID_BUTTON_OCTAGON               32817
 #define ID_BUTTON_TRAPEZOID             32818
 #define ID_BUTTON2                      32819
+#define ID_BUTTON_INVERSE               32819
 
 // Next default values for new objects
 // 

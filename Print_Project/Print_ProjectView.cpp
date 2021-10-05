@@ -115,8 +115,8 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_COMMAND(ID_FILE_SAVE, &CPrintProjectView::OnFileSave)
 	ON_WM_PAINT()
 	ON_WM_MOUSEWHEEL()
-	//ON_COMMAND(ID_FILE_OPEN, &CPrintProjectView::OnFileOpen)
 	ON_COMMAND(ID_FILE_OPEN, &CPrintProjectView::OnFileOpen)
+	//ON_COMMAND(ID_FILE_OPEN, &CPrintProjectView::OnFileOpen)
 	ON_COMMAND(ID_BUTTON_PENTAGON, &CPrintProjectView::OnButtonPentagon)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_PENTAGON, &CPrintProjectView::OnUpdateButtonPentagon)
 	ON_COMMAND(ID_BUTTON_HEXAGON, &CPrintProjectView::OnButtonHexagon)
@@ -125,9 +125,12 @@ BEGIN_MESSAGE_MAP(CPrintProjectView, CView)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_OCTAGON, &CPrintProjectView::OnUpdateButtonOctagon)
 	ON_COMMAND(ID_BUTTON_TRAPEZOID, &CPrintProjectView::OnButtonTrapezoid)
 	ON_UPDATE_COMMAND_UI(ID_BUTTON_TRAPEZOID, &CPrintProjectView::OnUpdateButtonTrapezoid)
+	ON_COMMAND(ID_BUTTON_INVERSE, &CPrintProjectView::OnButtonInverse)
 END_MESSAGE_MAP()
 
 // CPrintProjectView 생성/소멸
+CImage m_bmpBitmap;
+int width, height;
 
 CPrintProjectView::CPrintProjectView() 
 	: m_nDrawMode(0)
@@ -174,8 +177,14 @@ BOOL CPrintProjectView::PreCreateWindow(CREATESTRUCT& cs)
 
 void CPrintProjectView::OnDraw(CDC* pDC)
 {
-	
 
+	CPrintProjectDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	if (pDoc->m_Dib.IsValid())
+		pDoc->m_Dib.Draw(pDC->m_hDC);
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 }
 
@@ -1466,6 +1475,16 @@ void CPrintProjectView::OnFileSave()
 
 
 
+
+
+void CPrintProjectView::OnInitialUpdate()
+{
+	CView::OnInitialUpdate();
+
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+}
+
+
 void CPrintProjectView::OnFileOpen()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
@@ -1480,10 +1499,10 @@ void CPrintProjectView::OnFileOpen()
 	{
 		//OnOpenDocument(dlg.GetPathName());
 		CString strPathName = dlg.GetPathName();
-		CDC *pDc = GetWindowDC();
+		CDC* pDc = GetWindowDC();
 		CDC memdc;
-		CImage m_bmpBitmap;
-		int width, height;
+
+
 		m_bmpBitmap.Destroy();
 		m_bmpBitmap.Load(strPathName);
 		width = m_bmpBitmap.GetWidth();
@@ -1491,33 +1510,41 @@ void CPrintProjectView::OnFileOpen()
 
 		memdc.CreateCompatibleDC(pDc);
 		m_bmpBitmap.Draw(/*memdc.*/pDc->m_hDC, 0, 0, width, height);
-		
+		m_image = m_bmpBitmap;
+		invert_image.Create(m_image.GetWidth(), m_image.GetHeight(), m_image.GetBPP(), 0);
+
 		pDc->StretchBlt(0, 0, width, height, &memdc, 0, 0, width, height, SRCCOPY);
 
 		ReleaseDC(pDc);
 
 		pDc->DeleteDC();
 		pDc = NULL;
+
 	}
 
 }
 
-
-void CPrintProjectView::OnInitialUpdate()
+void CPrintProjectView::OnButtonInverse()
 {
-	CView::OnInitialUpdate();
+	CClientDC dc(this);
 
-	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	COLORREF temp_color;
+
+	for (int y = 0; y < m_image.GetHeight(); y++) { // 이미지의 세로 픽셀값 만큼
+		for (int x = 0; x < m_image.GetWidth(); x++) { // 이미지의 가로 픽셀값 만큼
+			temp_color = m_image.GetPixel(x, y); // 현재 픽셀의 색상을 얻어 저장
+
+			int r = GetRValue(temp_color); // 현재 픽셀의 RGB중 R값을 저장
+			int g = GetGValue(temp_color); // 현재 픽셀의 RGB중 G값을 저장
+			int b = GetBValue(temp_color); // 현재 픽셀의 RGB중 B값을 저장
+
+			int new_r = 255 - r; // 얻은 R값을 최대값에 빼서 반전값을 얻음
+			int new_g = 255 - g; // 얻은 G값을 최대값에 빼서 반전값을 얻음
+			int new_b = 255 - b; // 얻은 B값을 최대값에 빼서 반전값을 얻음
+
+			invert_image.SetPixel(x, y, RGB(new_r, new_g, new_b));
+			// 반전된 RGB 값으로 새로운 이미지에 SetPixel 해줌
+		}
+	}
+	invert_image.Draw(dc, 500, 10); // 좌표(500,10)을 기준으로 이미지 출력
 }
-
-
-
-
-
-
-
-
-
-
-
-

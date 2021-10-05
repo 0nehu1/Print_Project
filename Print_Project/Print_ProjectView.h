@@ -32,7 +32,8 @@ public:
 	int m_nZoomRate; // 확대/축소 비율
 // 작업입니다.
 public:
-
+	CImage m_image; // 원본 이미지 변수
+	CImage invert_image; // 반전 이미지 변수
 // 재정의입니다.
 public:
 	virtual void OnDraw(CDC* pDC);  // 이 뷰를 그리기 위해 재정의되었습니다.
@@ -164,8 +165,8 @@ public:
 	CRect m_picture;
 	afx_msg void OnPaint();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
-	//afx_msg void OnFileOpen();
 	afx_msg void OnFileOpen();
+	//afx_msg void OnFileOpen();
 	virtual void OnInitialUpdate();
 	afx_msg void OnButtonPentagon();
 	afx_msg void OnUpdateButtonPentagon(CCmdUI* pCmdUI);
@@ -175,6 +176,7 @@ public:
 	afx_msg void OnUpdateButtonOctagon(CCmdUI* pCmdUI);
 	afx_msg void OnButtonTrapezoid();
 	afx_msg void OnUpdateButtonTrapezoid(CCmdUI* pCmdUI);
+	afx_msg void OnButtonInverse();
 };
 
 #ifndef _DEBUG  // Print_ProjectView.cpp의 디버그 버전

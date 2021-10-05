@@ -88,11 +88,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>pch.h;</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -183,7 +183,19 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Enhance.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="IppImage\IppColor.h" />
+    <ClInclude Include="IppImage\IppConvert.h" />
+    <ClInclude Include="IppImage\IppDib.h" />
+    <ClInclude Include="IppImage\IppEnhance.h" />
+    <ClInclude Include="IppImage\IppFeature.h" />
+    <ClInclude Include="IppImage\IppFilter.h" />
+    <ClInclude Include="IppImage\IppFourier.h" />
+    <ClInclude Include="IppImage\IppGeometry.h" />
+    <ClInclude Include="IppImage\IppImage.h" />
+    <ClInclude Include="IppImage\RGBBYTE.h" />
+    <ClInclude Include="IppImage\stdafx.h" />
     <ClInclude Include="LineControl.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="pch.h" />
@@ -194,14 +206,19 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Enhance.cpp" />
+    <ClCompile Include="IppImage\IppColor.cpp" />
+    <ClCompile Include="IppImage\IppConvert.cpp" />
+    <ClCompile Include="IppImage\IppDib.cpp" />
+    <ClCompile Include="IppImage\IppEnhance.cpp" />
+    <ClCompile Include="IppImage\IppFeature.cpp" />
+    <ClCompile Include="IppImage\IppFilter.cpp" />
+    <ClCompile Include="IppImage\IppFourier.cpp" />
+    <ClCompile Include="IppImage\IppGeometry.cpp" />
+    <ClCompile Include="IppImage\stdafx.cpp" />
     <ClCompile Include="LineControl.cpp" />
     <ClCompile Include="MainFrm.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="pch.cpp" />
     <ClCompile Include="Print_Project.cpp" />
     <ClCompile Include="Print_ProjectDoc.cpp" />
     <ClCompile Include="Print_ProjectView.cpp" />
