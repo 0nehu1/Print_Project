@@ -1546,5 +1546,5 @@ void CPrintProjectView::OnButtonInverse()
 			// 반전된 RGB 값으로 새로운 이미지에 SetPixel 해줌
 		}
 	}
-	invert_image.Draw(dc, 500, 10); // 좌표(500,10)을 기준으로 이미지 출력
+	invert_image.Draw(dc, m_image.GetWidth(), 0); // 좌표(500,10)을 기준으로 이미지 출력
 }
